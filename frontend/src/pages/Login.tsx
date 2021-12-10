@@ -4,14 +4,15 @@ import {FcGoogle} from 'react-icons/fc'
 import InputText from "../component/inputs/InputText";
 import SimpleButton from "../component/buttons/SimpleButton";
 import {useAuth} from "../context/AuthContext";
-import {Link} from "react-router-dom";
-import {FORGOT_PASSWORD_PAGE, SIGNUP_PAGE} from "../constant/routes";
+import {Link, useNavigate} from "react-router-dom";
+import {COMPANY_LIST_PAGE, FORGOT_PASSWORD_PAGE, SIGNUP_PAGE} from "../constant/routes";
 
 const Login = () => {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
 
     const {login} = useAuth()
+    const navigate = useNavigate()
 
     const handleOAuthLogin = async (provider: Provider) => {
         login(undefined, undefined, provider)
@@ -51,7 +52,8 @@ const Login = () => {
                 <div className={'flex flex-col gap-5 px-10 md:p-10 w-96'}>
                     <SimpleButton label={'Login with Google'} onChange={() => handleOAuthLogin('google')} color={'red'}
                                   icon={<FcGoogle size={30}/>}/>
-                    <SimpleButton label={'Try Without Login'} onChange={() => null} color={'indigo'}/>
+                    <SimpleButton label={'Try Without Login'} onChange={() => navigate(COMPANY_LIST_PAGE.path)}
+                                  color={'indigo'}/>
                 </div>
             </div>
         </div>);

@@ -4,6 +4,7 @@ import GoBackButton from '../component/buttons/GoBackButton';
 import SimpleButton from '../component/buttons/SimpleButton';
 import InputText from '../component/inputs/InputText';
 import {supabase} from "../constant/supabase";
+import {LOGIN_PAGE} from "../constant/routes";
 
 const ForgotPassword: React.FC = () => {
     const [email, setEmail] = useState<string>('')
@@ -31,7 +32,7 @@ const ForgotPassword: React.FC = () => {
             <div
                 className={'flex flex-col md:flex-row justify-center items-center text-center rounded-xl border-2 bg-white p-5 gap-5'}>
                 <div className={'flex flex-col gap-5 px-10 pt-10 md:p-10'}>
-                    <GoBackButton/>
+                    <GoBackButton link={LOGIN_PAGE.path}/>
                     <div>
                         <div className={'text-3xl font-bold uppercase'}>
                             Forgot your password

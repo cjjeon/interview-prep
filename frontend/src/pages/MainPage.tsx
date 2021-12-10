@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
-import {LOGIN_PAGE} from '../constant/routes';
+import {COMPANY_LIST_PAGE, LOGIN_PAGE} from '../constant/routes';
 import {useAuth} from "../context/AuthContext";
 
 const MainPage: React.FC = () => {
@@ -10,6 +10,8 @@ const MainPage: React.FC = () => {
     const nextPage = () => {
         if (!isLoggedIn) {
             navigate(LOGIN_PAGE.path)
+        } else {
+            navigate(COMPANY_LIST_PAGE.path)
         }
     }
 
