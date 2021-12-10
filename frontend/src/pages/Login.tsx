@@ -1,176 +1,60 @@
-import React, {createRef, useState} from "react";
-import {supabase} from "../constant/supabase";
+import React, {useState} from "react";
 import {Provider} from "@supabase/supabase-js";
-
-interface IHelperText {
-    error: boolean;
-    text: string
-}
+import {FcGoogle} from 'react-icons/fc'
+import InputText from "../component/inputs/InputText";
+import SimpleButton from "../component/buttons/SimpleButton";
+import {useAuth} from "../context/AuthContext";
+import {Link} from "react-router-dom";
+import {FORGOT_PASSWORD_PAGE, SIGNUP_PAGE} from "../constant/routes";
 
 const Login = () => {
-    const [helperText, setHelperText] = useState<IHelperText>({error: false, text: ''});
-    const emailRef = createRef<HTMLInputElement>();
-    const passwordRef = createRef<HTMLInputElement>();
+    const [email, setEmail] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
 
-    const handleLogin = async (type: "LOGIN" | "REGISTER") => {
-        const email = emailRef.current?.value;
-        const password = passwordRef.current?.value;
-
-        const {user, error} =
-            type === "LOGIN"
-                ? await supabase.auth.signIn({email, password})
-                : await supabase.auth.signUp({email, password});
-
-        if (error) {
-            setHelperText({error: true, text: error.message});
-        } else if (!user && !error) {
-            setHelperText({
-                error: false,
-                text: "An email has been sent to you for verification!",
-            });
-        }
-    };
+    const {login} = useAuth()
 
     const handleOAuthLogin = async (provider: Provider) => {
-        // You need to enable the third party auth you want in Authentication > Settings
-        // Read more on: https://supabase.com/docs/guides/auth#third-party-logins
-        let {error} = await supabase.auth.signIn({provider});
-        if (error) console.log("Error: ", error.message);
+        login(undefined, undefined, provider)
     };
 
-    const forgotPassword = async (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-        // Read more on https://supabase.com/docs/reference/javascript/reset-password-email#notes
-        e.preventDefault();
-        const email = prompt("Please enter your email:");
-
-        if (email === null || email === "") {
-            setHelperText({error: true, text: "You must enter your email."});
-        } else {
-            let {error} = await supabase.auth.api.resetPasswordForEmail(
-                email
-            );
-            if (error) {
-                console.error("Error: ", error.message);
-            } else {
-                setHelperText({
-                    error: false,
-                    text: "Password recovery email has been sent.",
-                });
-            }
-        }
-    };
 
     return (
         <div
             className={
-                "w-full h-full sm:h-auto sm:w-2/5 max-w-sm p-5 bg-white shadow flex flex-col text-base"
+                "flex justify-center items-center w-full h-screen"
             }
         >
-            <span
-                className={
-                    "font-sans text-4xl text-center pb-2 mb-1 border-b mx-4 align-center"
-                }
-            >
-                Login
-            </span>
-            <label
-                className={"mt-3 mb-2 font-medium text-lg"}
-                htmlFor={"email"}
-            >
-                <span className={"font-mono mr-1 text-red-400"}>*</span>Email:
-            </label>
-            <input
-                className={"bg-gray-100 border py-1 px-3"}
-                type={"email"}
-                name={"email"}
-                ref={emailRef}
-                required
-            />
-            <label
-                className={"mt-3 mb-2 font-medium text-lg"}
-                htmlFor={"password"}
-            >
-                <span className={"font-mono mr-1 text-red-400"}>*</span>
-                Password:
-            </label>
-            <input
-                className={"bg-gray-100 border py-1 px-3"}
-                type={"password"}
-                name={"password"}
-                ref={passwordRef}
-                required
-            />
-            <span
-                className={
-                    "text-blue-600 mt-2 cursor-pointer self-end text-sm font-medium"
-                }
-                onClick={forgotPassword}
-            >
-                Forgot Password?
-            </span>
-            {!!helperText.text && (
-                <div
-                    className={`border px-1 py-2 my-2 text-center text-sm ${
-                        helperText.error
-                            ? "bg-red-100 border-red-300 text-red-400"
-                            : "bg-green-100 border-green-300 text-green-500"
-                    }`}
-                >
-                    {helperText.text}
-                </div>
-            )}
-            <div className="mt-2 flex">
-                <span className="block mx-1.5 w-full rounded-md shadow-sm">
-                    <button
-                        type="submit"
-                        onClick={() =>
-                            handleLogin("REGISTER").catch(console.error)
-                        }
-                        className={
-                            "border w-full border-blue-600 text-blue-600 flex justify-center py-2 px-4 text-sm font-medium rounded-md hover:bg-blue-200 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
-                        }
-                    >
-                        Sign Up
-                    </button>
-                </span>
-                <span className="block w-full mx-1.5 rounded-md shadow-sm">
-                    <button
-                        onClick={() => handleLogin("LOGIN")}
-                        type="button"
-                        className="flex w-full justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
-                    >
-                        Sign In
-                    </button>
-                </span>
-            </div>
-            <div className="mt-3">
-                <div className="relative">
-                    <div className="absolute inset-0 flex items-center">
-                        <div className="w-full mx-1.5 border-t border-gray-300"/>
+            <div
+                className={'flex flex-col md:flex-row justify-center items-center text-center rounded-xl border-2 bg-white p-5 gap-5'}>
+                <div className={'flex flex-col gap-5 border-0 md:border-r-2 px-10 pt-10 md:p-10'}>
+                    <div>
+                        <div className={'text-3xl font-bold uppercase'}>
+                            Login
+                        </div>
                     </div>
-                    <div className="relative flex justify-center text-sm leading-5">
-                        <span className="px-2 bg-white text-gray-500">
-                            Or continue with
-                        </span>
+                    <div>
+                        <InputText name={'email'} value={email} type={'text'} label={'Email Address'}
+                                   onChange={(value) => setEmail(value)}/>
+                        <InputText name={'password'} value={password} type={'password'} label={'Password'}
+                                   onChange={(value) => setPassword(value)}/>
+                        <div className={'pb-2'}>
+                            <Link className={'text-sm text-blue-300 underline my-2'} to={FORGOT_PASSWORD_PAGE.path}>Forgot
+                                your Password?</Link>
+                        </div>
+                        <SimpleButton label={'Login'} onChange={() => login(email, password)}/>
+                    </div>
+                    <div>
+                        <Link className={'text-right text-base text-blue-300 my-2'} to={SIGNUP_PAGE.path}>Create Account
+                            Using Email</Link>
                     </div>
                 </div>
-
-                <div>
-                    <div className="mt-3">
-                        <span className="block rounded-md shadow-sm">
-                            <button
-                                onClick={() => handleOAuthLogin("google")}
-                                type="button"
-                                className="w-3/4 mx-auto flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
-                            >
-                                Google
-                            </button>
-                        </span>
-                    </div>
+                <div className={'flex flex-col gap-5 px-10 md:p-10 w-96'}>
+                    <SimpleButton label={'Login with Google'} onChange={() => handleOAuthLogin('google')} color={'red'}
+                                  icon={<FcGoogle size={30}/>}/>
+                    <SimpleButton label={'Try Without Login'} onChange={() => null} color={'indigo'}/>
                 </div>
             </div>
-        </div>
-    );
+        </div>);
 };
 
 export default Login;
