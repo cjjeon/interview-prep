@@ -5,16 +5,14 @@ interface InputTextProps {
     name: string
     label: string
     value: string
-    type: "text" | "password"
     onChange: (value: string) => void
     background?: "white" | "transparent"
 }
 
-const InputText: React.FC<InputTextProps> = ({
+const InputTextArea: React.FC<InputTextProps> = ({
     name,
     label,
     value,
-    type,
     onChange,
     background = "white",
 }) => {
@@ -23,11 +21,10 @@ const InputText: React.FC<InputTextProps> = ({
 
     return (
         <div className={"mb-4 relative"}>
-            <input
+            <textarea
                 className={`__input_text_input ${
                     value !== "" ? "filled" : ""
                 } border border-gray-400 appearance-none rounded w-full px-3 py-3 pt-5 pb-2 focus focus:border-indigo-600 focus:outline-none active:outline-none active:border-indigo-600 ${backgroundCSS}`}
-                type={type}
                 value={value}
                 id={name}
                 onChange={(event) => onChange(event.target.value)}
@@ -44,4 +41,4 @@ const InputText: React.FC<InputTextProps> = ({
     )
 }
 
-export default InputText
+export default InputTextArea

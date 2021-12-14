@@ -21,7 +21,7 @@ const MainPage: React.FC = () => {
                 Need help on preparing interview?
             </h1>
             <div className={'text-lg text-center text-gray-400'}>
-                <h3>
+                <h3 className={'font'}>
                     Interview is not easy and it's more challenging if you are not prepare for it.
                 </h3>
                 <h3>
