@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import Loading from "../../component/loading/Loading"
 import { useAuth } from "../../context/AuthContext"
 import { useNavigate } from "react-router-dom"
-import { COMPANY_CREATE_PAGE } from "../../constant/routes"
+import { COMPANY_CREATE_PAGE, CREATE_POSITION_PAGE } from "../../constant/routes"
 import { getCompanies } from "../../api/supabase"
 import { toast } from "react-toastify"
 import { Company } from "../../models/Company.model"
@@ -17,26 +17,33 @@ const Companies: React.FC<CompaniesProps> = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
+        let mounted = true
         if (!isLoggedIn) {
             navigate(COMPANY_CREATE_PAGE.path)
         } else {
             getCompanies().then(({ data, error }) => {
-                if (error) {
-                    toast.error(error)
-                } else {
-                    if (data.length === 0) {
-                        navigate(COMPANY_CREATE_PAGE.path)
+                if (mounted) {
+                    if (error) {
+                        toast.error(error)
                     } else {
-                        setCompanies(data)
-                        setIsLoading(false)
+                        if (data.length === 0) {
+                            navigate(COMPANY_CREATE_PAGE.path)
+                        } else {
+                            setCompanies(data)
+                            setIsLoading(false)
+                        }
                     }
                 }
             })
+        }
+        return () => {
+            mounted = false
         }
     }, [isLoggedIn, navigate])
 
     const goToCompany = (companyId: number) => {
         // TODO Add method to go for company profile
+        navigate(CREATE_POSITION_PAGE.path.replace(":companyId", companyId.toString()))
     }
 
     if (isLoading) {
@@ -44,19 +51,13 @@ const Companies: React.FC<CompaniesProps> = () => {
     }
 
     return (
-        <div
-            className={"flex flex-col justify-center items-center text-center gap-2"}
-        >
-            <div className={"text-lg"}>
-                List of companies that you have interviewed in the past.
-            </div>
+        <div className={"flex flex-col justify-center items-center text-center gap-2"}>
+            <div className={"text-lg"}>Companies that you applied in the past:</div>
             {companies.map((company, index) => {
                 return (
                     <div
                         key={index}
-                        className={
-                            "p-2 w-64 border-4 rounded-lg border-yellow-300 cursor-pointer"
-                        }
+                        className={"p-2 w-64 border-4 rounded-lg border-yellow-300 cursor-pointer"}
                         onClick={() => {
                             return company.id ? goToCompany(company.id) : null
                         }}
@@ -65,13 +66,12 @@ const Companies: React.FC<CompaniesProps> = () => {
                     </div>
                 )
             })}
+            <div>Or</div>
             <div
-                className={
-                    "p-2 w-64 border-4 rounded-lg border-yellow-300 cursor-pointer"
-                }
+                className={"p-2 w-64 border-4 rounded-lg border-yellow-300 cursor-pointer"}
                 onClick={() => navigate(COMPANY_CREATE_PAGE.path)}
             >
-                Interview with New Company!
+                Interview with a new company
             </div>
         </div>
     )

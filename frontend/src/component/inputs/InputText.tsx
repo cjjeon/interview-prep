@@ -7,6 +7,7 @@ interface InputTextProps {
     value: string
     type: "text" | "password"
     onChange: (value: string) => void
+    onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void
     background?: "white" | "transparent"
 }
 
@@ -15,6 +16,7 @@ const InputText: React.FC<InputTextProps> = ({
     label,
     value,
     type,
+    onKeyPress,
     onChange,
     background = "white",
 }) => {
@@ -30,11 +32,12 @@ const InputText: React.FC<InputTextProps> = ({
                 type={type}
                 value={value}
                 id={name}
+                onKeyPress={onKeyPress}
                 onChange={(event) => onChange(event.target.value)}
             />
             <label
                 className={
-                    "__input_text_label absolute mb-0 -mt-3 pt-4 pl-3 leading-tighter text-gray-400 text-base mt-2 cursor-text"
+                    "__input_text_label absolute mb-0 -mt-2 pt-4 pl-3 leading-tighter text-gray-400 text-base mt-2 cursor-text"
                 }
                 htmlFor={name}
             >

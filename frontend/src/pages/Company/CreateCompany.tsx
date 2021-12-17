@@ -39,7 +39,7 @@ const CreateCompany: React.FC<CreateCompanyProps> = () => {
     return (
         <div className={"flex flex-col justify-center h-screen w-full p-20 gap-10"}>
             <div>
-                <h1 className={"text-3xl mb-5"}>1. Know The Company</h1>
+                <h1 className={"text-3xl mb-5"}>Know The Company</h1>
                 <div>
                     When you are doing interview, it's important to understand what
                     company you are applying for. So, take your time, look at their

@@ -11,12 +11,11 @@ export const supabase = createClient(
 
 export function getCompanies(): PromiseLike<{ data: Company[]; error?: string }> {
     return supabase
-        .from("company")
+        .from("company_description")
         .select(
             `
-        id,
-        name,
-        company_description(description)
+        description,
+        company(id,name)
     `
         )
         .then(({ data, error }) => {
@@ -28,26 +27,54 @@ export function getCompanies(): PromiseLike<{ data: Company[]; error?: string }>
                 }
             } else {
                 if (data) {
-                    const output: Company[] = []
-
-                    data.forEach((d) => {
-                        if (
-                            d.company_description &&
-                            d.company_description.length > 0
-                        ) {
-                            output.push({
-                                id: d.id,
-                                name: d.name,
-                                description: d.company_description[0].description,
-                            })
-                        }
-                    })
-
-                    return { data: output }
+                    return {
+                        data: data.map((d) => {
+                            return {
+                                id: d.company.id,
+                                name: d.company.name,
+                                description: d.description,
+                            }
+                        }),
+                    }
                 } else {
                     return {
                         data: [],
                     }
+                }
+            }
+        })
+}
+
+export function getCompany(
+    companyId: number
+): PromiseLike<{ data?: Company; error?: string }> {
+    return supabase
+        .from("company_description")
+        .select(
+            `
+        description,
+        company(id,name)
+    `
+        )
+        .eq("company.id", companyId)
+        .limit(1)
+        .then(({ data, error }) => {
+            if (error) {
+                console.error(error.message)
+                return {
+                    error: "Fail to get company",
+                }
+            } else {
+                if (data) {
+                    return {
+                        data: {
+                            id: data[0].company.id,
+                            name: data[0].company.name,
+                            description: data[0].description,
+                        },
+                    }
+                } else {
+                    return {}
                 }
             }
         })

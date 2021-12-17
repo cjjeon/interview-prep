@@ -1,0 +1,6 @@
+flask==2.0.2
+python-dotenv==0.19.2
+requests==2.26.0
+authlib==0.15.5
+flask-sqlalchemy==2.5.1
+psycopg2-binary==2.9.2

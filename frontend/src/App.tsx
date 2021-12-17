@@ -1,7 +1,7 @@
-import React from "react"
+import React, { useRef } from "react"
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
-import { CSSTransition, TransitionGroup } from "react-transition-group"
+import { CSSTransition } from "react-transition-group"
 
 import { ROUTES } from "./constant/routes"
 import { Auth } from "./context/AuthContext"
@@ -11,22 +11,27 @@ import "react-toastify/dist/ReactToastify.css"
 
 const AnimatedSwitch = () => {
     const location = useLocation()
+    const nodeRef = useRef<HTMLDivElement>(null)
     return (
-        <TransitionGroup>
-            <CSSTransition key={location.key} classNames="fade" timeout={2000}>
+        <CSSTransition nodeRef={nodeRef} key={location.key} classNames="fade" timeout={500}>
+            <div ref={nodeRef}>
                 <Routes>
-                    {ROUTES.map((route) => {
-                        return <Route path={route.path} element={route.component} />
+                    {ROUTES.map((route, index) => {
+                        return <Route key={index} path={route.path} element={route.component} />
                     })}
                 </Routes>
-            </CSSTransition>
-        </TransitionGroup>
+            </div>
+        </CSSTransition>
     )
 }
 
 function App() {
     return (
-        <div>
+        <div
+            className={
+                "bg-gradient-to-br from-yellow-50 to-yellow-100 bg-gradient-radial w-full min-h-screen max-h-full bg-fixed flex justify-center items-center"
+            }
+        >
             <ToastContainer
                 position="top-right"
                 autoClose={5000}
@@ -41,15 +46,9 @@ function App() {
 
             <Auth>
                 <BrowserRouter>
-                    <body
-                        className={
-                            "bg-gradient-to-br from-yellow-50 to-yellow-100 bg-gradient-radial w-full min-h-screen max-h-full bg-fixed flex justify-center items-center"
-                        }
-                    >
-                        <div className={"max-w-screen-lg"}>
-                            <AnimatedSwitch />
-                        </div>
-                    </body>
+                    <div className={"max-w-screen-lg"}>
+                        <AnimatedSwitch />
+                    </div>
                 </BrowserRouter>
             </Auth>
         </div>
