@@ -34,7 +34,7 @@ export const SIGNUP_PAGE: IRoute = {
 
 // Company Pages
 export const COMPANY_LIST_PAGE: IRoute = {
-    path: "/company/list",
+    path: "/company",
     component: <Companies />,
 }
 

@@ -22,3 +22,10 @@ class CompanyDescription(db.Model):
 
     company = db.relationship('Company')
     user = db.relationship('User')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.company.name,
+            'description': self.description,
+        }

@@ -3,13 +3,26 @@ import Loading from "../../component/loading/Loading"
 import { useAuth } from "../../context/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { COMPANY_CREATE_PAGE, CREATE_POSITION_PAGE } from "../../constant/routes"
-import { getCompanies } from "../../api/supabase"
-import { toast } from "react-toastify"
 import { Company } from "../../models/Company.model"
+import { gql, useQuery } from "@apollo/client"
 
-interface CompaniesProps {}
+const GET_COMPANIES = gql`
+    query GetCompanies {
+        companies {
+            success
+            errors
+            companies {
+                id
+                name
+                description
+            }
+        }
+    }
+`
 
-const Companies: React.FC<CompaniesProps> = () => {
+const Companies: React.FC = () => {
+    const { data, client } = useQuery(GET_COMPANIES)
+
     const [companies, setCompanies] = useState<Company[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -20,21 +33,6 @@ const Companies: React.FC<CompaniesProps> = () => {
         let mounted = true
         if (!isLoggedIn) {
             navigate(COMPANY_CREATE_PAGE.path)
-        } else {
-            getCompanies().then(({ data, error }) => {
-                if (mounted) {
-                    if (error) {
-                        toast.error(error)
-                    } else {
-                        if (data.length === 0) {
-                            navigate(COMPANY_CREATE_PAGE.path)
-                        } else {
-                            setCompanies(data)
-                            setIsLoading(false)
-                        }
-                    }
-                }
-            })
         }
         return () => {
             mounted = false

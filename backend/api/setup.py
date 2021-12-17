@@ -1,14 +1,19 @@
 from authlib.integrations.flask_client import OAuth
 from flask import Flask
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
 from config import DbConfig, AppConfig, Auth0Config
 
+# Setting up Flask
 app = Flask(__name__, static_url_path='/public', static_folder='./public')
 app.config['SQLALCHEMY_DATABASE_URI'] = DbConfig.generate_url()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = AppConfig.secret_key
 app.debug = True
+CORS(app, resource={"*": {"origins": ["http://localhost:3000"]}})
+
+# Setting up database
 db = SQLAlchemy(app)
 
 oauth = OAuth(app)

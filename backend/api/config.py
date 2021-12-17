@@ -8,6 +8,8 @@ class Auth0Config:
     client_id = ""
     client_secret = ""
     base_url = ''
+    login_redirect_url = 'http://localhost:3000/company'
+    logout_redirect_url = 'http://localhost:3000'
 
 
 class DbConfig:

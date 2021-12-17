@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { supabase } from "../api/supabase"
 import { Provider, User } from "@supabase/supabase-js"
 import { toast } from "react-toastify"
+import { gql, useQuery } from "@apollo/client"
 
 interface IAuthContext {
     isLoggedIn: boolean
@@ -23,9 +24,29 @@ export function useAuth(): IAuthContext {
     return useContext(AuthContext)
 }
 
+const GET_USER = gql`
+    query {
+        user {
+            success
+            errors
+            user {
+                email
+                firstName
+                lastName
+            }
+        }
+    }
+`
+
 export const Auth: React.FC = ({ children }) => {
     const [user, setUser] = useState<User | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(true)
+
+    const { data } = useQuery(GET_USER)
+
+    useEffect(() => {
+        console.log(data)
+    }, [data])
 
     useEffect(() => {
         const user = supabase.auth.user()
@@ -64,9 +85,5 @@ export const Auth: React.FC = ({ children }) => {
         return <div>Loading....</div>
     }
 
-    return (
-        <AuthContext.Provider value={{ isLoggedIn: !!user, user, login, logout }}>
-            {children}
-        </AuthContext.Provider>
-    )
+    return <AuthContext.Provider value={{ isLoggedIn: !!user, user, login, logout }}>{children}</AuthContext.Provider>
 }
