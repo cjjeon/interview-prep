@@ -1,16 +1,19 @@
+import json
 from functools import wraps
-from urllib.parse import urlencode
+from urllib.request import urlopen
 
+import requests
 from ariadne import graphql_sync
 from ariadne.constants import PLAYGROUND_HTML
-from flask import redirect, request, jsonify, session
+from flask import request, jsonify, _request_ctx_stack
+from jose import jwt
 from werkzeug.exceptions import HTTPException
 
-from config import AppConfig
+from api.setup import schema
 from config import Auth0Config
-from dao.user_dao import get_user, create_user
-from graphql_api.setup import schema
-from setup import auth0, app
+from dao import get_user, create_user
+from model.models import Auth0UserModel, GraphQLContext
+from setup import app
 
 
 @app.errorhandler(Exception)
@@ -20,61 +23,116 @@ def handle_auth_error(ex):
     return response
 
 
+def get_token_auth_header():
+    """Obtains the Access Token from the Authorization Header
+    """
+    auth = request.headers.get("Authorization", None)
+    if not auth:
+        raise Exception({"code": "authorization_header_missing",
+                         "description":
+                             "Authorization header is expected"}, 401)
+
+    parts = auth.split()
+
+    if parts[0].lower() != "bearer":
+        raise Exception({"code": "invalid_header",
+                         "description":
+                             "Authorization header must start with"
+                             " Bearer"}, 401)
+    elif len(parts) == 1:
+        raise Exception({"code": "invalid_header",
+                         "description": "Token not found"}, 401)
+    elif len(parts) > 2:
+        raise Exception({"code": "invalid_header",
+                         "description":
+                             "Authorization header must be"
+                             " Bearer token"}, 401)
+
+    token = parts[1]
+    return token
+
+
 def requires_auth(f):
+    """Determines if the Access Token is valid
+    """
+
     @wraps(f)
     def decorated(*args, **kwargs):
-        if AppConfig.profile_key not in session:
-            return redirect('/login')
-        return f(*args, **kwargs)
+        token = get_token_auth_header()
+        jsonurl = urlopen(f"{Auth0Config.AUTH0_DOMAIN}.well-known/jwks.json")
+        jwks = json.loads(jsonurl.read())
+        unverified_header = jwt.get_unverified_header(token)
+        rsa_key = {}
+        for key in jwks["keys"]:
+            if key["kid"] == unverified_header["kid"]:
+                rsa_key = {
+                    "kty": key["kty"],
+                    "kid": key["kid"],
+                    "use": key["use"],
+                    "n": key["n"],
+                    "e": key["e"]
+                }
+        if rsa_key:
+            try:
+                payload = jwt.decode(
+                    token,
+                    rsa_key,
+                    algorithms=Auth0Config.AUTH0_ALGORITHMS,
+                    audience=Auth0Config.AUTH0_AUDIENCE,
+                    issuer=Auth0Config.AUTH0_DOMAIN
+                )
+            except jwt.ExpiredSignatureError:
+                raise Exception({"code": "token_expired",
+                                 "description": "token is expired"}, 401)
+            except jwt.JWTClaimsError:
+                raise Exception({"code": "invalid_claims",
+                                 "description":
+                                     "incorrect claims,"
+                                     "please check the audience and issuer"}, 401)
+            except Exception:
+                raise Exception({"code": "invalid_header",
+                                 "description":
+                                     "Unable to parse authentication"
+                                     " token."}, 401)
+
+            # After validating payload
+            # Get a user information from Auth0 API
+            response = requests.get(f"{Auth0Config.AUTH0_AUDIENCE}users/{payload['sub']}",
+                                    headers={'Authorization': f'Bearer {token}'})
+            response_json = response.json()
+            if get_user(response_json['user_id']) is None:
+                create_user(response_json['user_id'], response_json['email'], response_json['given_name'],
+                            response_json['family_name'])
+            _request_ctx_stack.top.current_user = Auth0UserModel(
+                user_id=response_json['user_id'],
+                email=response_json['email'],
+                first_name=response_json['given_name'],
+                last_name=response_json['family_name']
+            )
+
+            return f(*args, **kwargs)
+
+        raise Exception({"code": "invalid_header",
+                         "description": "Unable to find appropriate key"}, 401)
 
     return decorated
 
 
-@app.route('/callback')
-def callback_handling():
-    auth0.authorize_access_token()
-    resp = auth0.get('userinfo')
-    userinfo = resp.json()
-    user = get_user(userinfo['sub'])
-    if user is None:
-        user = create_user(
-            userinfo['sub'],
-            userinfo['email'],
-            userinfo['given_name'],
-            userinfo['family_name'],
-        )
-    session[AppConfig.jwt_payload] = user.to_dict()
-    return redirect(Auth0Config.login_redirect_url)
-
-
-@app.route('/login')
-def login():
-    return auth0.authorize_redirect(redirect_uri=Auth0Config.callback_url)
-
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    params = {'returnTo': Auth0Config.logout_redirect_url, 'client_id': Auth0Config.client_id}
-    return redirect(auth0.api_base_url + '/v2/logout?' + urlencode(params))
-
-
 @app.route('/graphql', methods=['GET'])
 def graphql_playground():
-    print(session)
     return PLAYGROUND_HTML, 200
 
 
 @app.route('/graphql', methods=['POST'])
+@requires_auth
 def graphql_server():
     data = request.get_json()
-    print(session)
     success, result = graphql_sync(
         schema,
         data,
-        context_value={
-            'user': session[AppConfig.jwt_payload] if AppConfig.jwt_payload in session else None
-        }
+        context_value=GraphQLContext(
+            user=_request_ctx_stack.top.current_user
+        )
     )
 
     status_code = 200 if success else 400

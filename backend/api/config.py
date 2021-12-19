@@ -1,15 +1,10 @@
-class AppConfig:
-    secret_key = 'ThisIsTheSecretKey'
-    jwt_payload = 'jwt_payload'
+import os
 
 
 class Auth0Config:
-    callback_url = 'http://localhost:5000/callback'
-    client_id = ""
-    client_secret = ""
-    base_url = ''
-    login_redirect_url = 'http://localhost:3000/company'
-    logout_redirect_url = 'http://localhost:3000'
+    AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN", 'https://something.auth0.com/')
+    AUTH0_AUDIENCE = os.environ.get("AUTH0_AUDIENCE", 'https://something.auth0.com/api/v2/')
+    AUTH0_ALGORITHMS = ['RS256']
 
 
 class DbConfig:

@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useParams } from "react-router-dom"
-import { Company } from "../../models/Company.model"
-import Loading from "../../component/loading/Loading"
-import { getCompany } from "../../api/supabase"
 import { toast } from "react-toastify"
 import InputText from "../../component/inputs/InputText"
 import FadeInOut from "../../component/transition/FadeInOut"
@@ -10,37 +7,10 @@ import SimpleButton from "../../component/buttons/SimpleButton"
 import { FaWindowClose } from "react-icons/fa"
 
 const CreatePosition: React.FC = () => {
-    const [company, setCompany] = useState<Company>({
-        name: "",
-        description: "",
-    })
-    const [isLoading, setIsLoading] = useState<boolean>(true)
-
     const [position, setPosition] = useState<string>("")
     const [skills, setSkills] = useState<string[]>([])
     const [skill, setSkill] = useState<string>("")
     const { companyId } = useParams()
-
-    useEffect(() => {
-        let mounted = true
-        if (companyId && parseInt(companyId)) {
-            getCompany(parseInt(companyId)).then(({ data, error }) => {
-                if (mounted) {
-                    if (error) {
-                        toast.error(error)
-                    } else if (data) {
-                        setCompany(data)
-                        setIsLoading(false)
-                    } else {
-                        // TODO navigate to company page
-                    }
-                }
-            })
-        }
-        return () => {
-            mounted = false
-        }
-    }, [companyId])
 
     const addSkill = () => {
         if (skill) {
@@ -60,10 +30,6 @@ const CreatePosition: React.FC = () => {
             toast.error("Please add the skill")
         } else {
         }
-    }
-
-    if (isLoading) {
-        return <Loading />
     }
 
     return (

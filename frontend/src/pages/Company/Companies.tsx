@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react"
 import Loading from "../../component/loading/Loading"
-import { useAuth } from "../../context/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { COMPANY_CREATE_PAGE, CREATE_POSITION_PAGE } from "../../constant/routes"
 import { Company } from "../../models/Company.model"
 import { gql, useQuery } from "@apollo/client"
+import { useAuth0 } from "@auth0/auth0-react"
 
 const GET_COMPANIES = gql`
     query GetCompanies {
@@ -21,30 +21,37 @@ const GET_COMPANIES = gql`
 `
 
 const Companies: React.FC = () => {
-    const { data, client } = useQuery(GET_COMPANIES)
+    const { data, loading } = useQuery(GET_COMPANIES)
 
     const [companies, setCompanies] = useState<Company[]>([])
-    const [isLoading, setIsLoading] = useState<boolean>(true)
 
-    const { isLoggedIn } = useAuth()
+    const { isAuthenticated } = useAuth0()
     const navigate = useNavigate()
 
     useEffect(() => {
         let mounted = true
-        if (!isLoggedIn) {
-            navigate(COMPANY_CREATE_PAGE.path)
+        if (!loading) {
+            if (!isAuthenticated) {
+                navigate(COMPANY_CREATE_PAGE.path)
+            } else if (data && data.companies.success) {
+                const c = data.companies.companies
+                if (c.length > 0) {
+                    setCompanies(c)
+                } else {
+                    navigate(COMPANY_CREATE_PAGE.path)
+                }
+            }
         }
         return () => {
             mounted = false
         }
-    }, [isLoggedIn, navigate])
+    }, [isAuthenticated, data, loading])
 
     const goToCompany = (companyId: number) => {
-        // TODO Add method to go for company profile
         navigate(CREATE_POSITION_PAGE.path.replace(":companyId", companyId.toString()))
     }
 
-    if (isLoading) {
+    if (loading) {
         return <Loading />
     }
 

@@ -3,15 +3,27 @@ import InputText from "../../component/inputs/InputText"
 import FadeInOut from "../../component/transition/FadeInOut"
 import InputTextArea from "../../component/inputs/InputTextArea"
 import { toast } from "react-toastify"
-import { createCompany } from "../../api/supabase"
 import { useNavigate } from "react-router-dom"
+import { gql, useMutation } from "@apollo/client"
 import { CREATE_POSITION_PAGE } from "../../constant/routes"
 
-interface CreateCompanyProps {}
+const CREATE_COMPANY = gql`
+    mutation CreateCompany($name: String!, $description: String!) {
+        createCompany(name: $name, description: $description) {
+            success
+            errors
+            company {
+                id
+            }
+        }
+    }
+`
 
-const CreateCompany: React.FC<CreateCompanyProps> = () => {
+const CreateCompany: React.FC = () => {
     const [name, setName] = useState<string>("")
     const [description, setDescription] = useState<string>("")
+
+    const [createCompany, { data, loading, error }] = useMutation(CREATE_COMPANY)
 
     const navigate = useNavigate()
 
@@ -22,15 +34,17 @@ const CreateCompany: React.FC<CreateCompanyProps> = () => {
             toast.error("Please summarize about the company!")
         } else {
             createCompany({
-                name,
-                description,
-            }).then(({ data, error }) => {
-                if (error) {
-                    console.error(error.message)
-                    toast.error("Fail to create company")
+                variables: {
+                    name,
+                    description,
+                },
+            }).then(({ data, errors }) => {
+                if (errors) {
+                    toast.error(errors)
                 } else {
-                    console.log(data)
-                    navigate(CREATE_POSITION_PAGE.path)
+                    if (data && data.createCompany.success) {
+                        navigate(CREATE_POSITION_PAGE.path.replace(":companyId", data.createCompany.company.id))
+                    }
                 }
             })
         }
@@ -41,9 +55,8 @@ const CreateCompany: React.FC<CreateCompanyProps> = () => {
             <div>
                 <h1 className={"text-3xl mb-5"}>Know The Company</h1>
                 <div>
-                    When you are doing interview, it's important to understand what
-                    company you are applying for. So, take your time, look at their
-                    website, search their online presents, what they value.
+                    When you are doing interview, it's important to understand what company you are applying for. So,
+                    take your time, look at their website, search their online presents, what they value.
                 </div>
             </div>
             <div className={"flex flex-col gap-5"}>
@@ -62,22 +75,16 @@ const CreateCompany: React.FC<CreateCompanyProps> = () => {
                         </div>,
                         <div className={"flex flex-col gap-2"}>
                             <div>
-                                Most interviewers are interested to know if the
-                                candidates are interested in the company. So, they
-                                will ask questions such as "Can you tell us about our
-                                company?".
+                                Most interviewers are interested to know if the candidates are interested in the
+                                company. So, they will ask questions such as "Can you tell us about our company?".
                             </div>
                             <div>
-                                In your own word, describe about the company. It
-                                doesn't have to be long but it's important for you
-                                write it out own your own word because it will help
-                                you remember.
+                                In your own word, describe about the company. It doesn't have to be long but it's
+                                important for you write it out own your own word because it will help you remember.
                             </div>
                             <InputTextArea
                                 name={"company-description"}
-                                label={
-                                    "In 50 ~ 100 words, can you tell me about the company?"
-                                }
+                                label={"In 50 ~ 100 words, can you tell me about the company?"}
                                 value={description}
                                 onChange={(value) => setDescription(value)}
                                 background={"transparent"}

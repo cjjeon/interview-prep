@@ -4,7 +4,6 @@ import { ToastContainer } from "react-toastify"
 import { CSSTransition } from "react-transition-group"
 
 import { ROUTES } from "./constant/routes"
-import { Auth } from "./context/AuthContext"
 
 import "./App.css"
 import "react-toastify/dist/ReactToastify.css"
@@ -44,13 +43,11 @@ function App() {
                 pauseOnHover
             />
 
-            <Auth>
-                <BrowserRouter>
-                    <div className={"max-w-screen-lg"}>
-                        <AnimatedSwitch />
-                    </div>
-                </BrowserRouter>
-            </Auth>
+            <BrowserRouter>
+                <div className={"max-w-screen-lg"}>
+                    <AnimatedSwitch />
+                </div>
+            </BrowserRouter>
         </div>
     )
 }

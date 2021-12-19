@@ -3,14 +3,23 @@ import ReactDOM from "react-dom"
 import "./index.css"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
-import { ApolloProvider } from "@apollo/client"
-import { apolloClient } from "./api/apollo"
+import { Auth0Provider } from "@auth0/auth0-react"
+import { AUTH_CONFIG } from "./constant/configs"
+import AuthApolloProvider from "./context/AuthApolloProvider"
 
 ReactDOM.render(
     <React.StrictMode>
-        <ApolloProvider client={apolloClient}>
-            <App />
-        </ApolloProvider>
+        <Auth0Provider
+            domain={AUTH_CONFIG.domain}
+            clientId={AUTH_CONFIG.clientId}
+            redirectUri={window.location.origin}
+            audience={`https://${AUTH_CONFIG.domain}/api/v2/`}
+            scope={"read:current_user"}
+        >
+            <AuthApolloProvider>
+                <App />
+            </AuthApolloProvider>
+        </Auth0Provider>
     </React.StrictMode>,
     document.getElementById("root")
 )
