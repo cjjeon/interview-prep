@@ -5,6 +5,9 @@ services:
         context: ./backend/api
     ports:
       - 5000:5000
+    depends_on:
+      - db
+    restart: unless-stopped
   flyway:
     image: flyway/flyway
     command: -locations=filesystem:/flyway/sql/migration -url=jdbc:postgresql://db:5432/ -schemas=postgres -user=postgres -password=postgres -connectRetries=60 migrate
@@ -19,6 +22,8 @@ services:
     restart: always
     ports:
       - 5432:5432
+    volumes:
+      - ./.db:/var/lib/postgresql/data
   swag:
     image: ghcr.io/linuxserver/swag
     container_name: swag
@@ -34,7 +39,7 @@ services:
       - EMAIL=hello@cjjeon.com
       - ONLY_SUBDOMAINS=true
     volumes:
-      - ./prod-config:/config
+      - ./prod-config/default:/config/nginx/site-confs/default
     ports:
       - 443:443
       - 80:80 #optional

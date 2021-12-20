@@ -1,0 +1,21 @@
+error_page 502 /502.html;
+
+# redirect all traffic to https
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    include /config/nginx/ssl.conf;
+    include /config/nginx/ldap.conf;
+
+    location / {
+        proxy_pass http://backend:5000;
+    }
+}
