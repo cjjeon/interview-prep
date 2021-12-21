@@ -3,7 +3,7 @@ import React from "react"
 import { useNavigate } from "react-router-dom"
 import { COMPANY_LIST_PAGE } from "../constant/routes"
 
-const Login = () => {
+const Login: React.FC = () => {
     const { isAuthenticated, loginWithRedirect } = useAuth0()
     const navigate = useNavigate()
 

@@ -1,5 +1,4 @@
 import React, { useState } from "react"
-import { useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import InputText from "../../component/inputs/InputText"
 import FadeInOut from "../../component/transition/FadeInOut"
@@ -10,7 +9,6 @@ const CreatePosition: React.FC = () => {
     const [position, setPosition] = useState<string>("")
     const [skills, setSkills] = useState<string[]>([])
     const [skill, setSkill] = useState<string>("")
-    const { companyId } = useParams()
 
     const addSkill = () => {
         if (skill) {

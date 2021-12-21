@@ -23,7 +23,7 @@ const CreateCompany: React.FC = () => {
     const [name, setName] = useState<string>("")
     const [description, setDescription] = useState<string>("")
 
-    const [createCompany, { data, loading, error }] = useMutation(CREATE_COMPANY)
+    const [createCompany] = useMutation(CREATE_COMPANY)
 
     const navigate = useNavigate()
 

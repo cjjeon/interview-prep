@@ -29,7 +29,6 @@ const Companies: React.FC = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        let mounted = true
         if (!loading) {
             if (!isAuthenticated) {
                 navigate(COMPANY_CREATE_PAGE.path)
@@ -42,10 +41,7 @@ const Companies: React.FC = () => {
                 }
             }
         }
-        return () => {
-            mounted = false
-        }
-    }, [isAuthenticated, data, loading])
+    }, [isAuthenticated, data, loading, navigate])
 
     const goToCompany = (companyId: number) => {
         navigate(CREATE_POSITION_PAGE.path.replace(":companyId", companyId.toString()))
