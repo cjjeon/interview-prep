@@ -8,11 +8,11 @@ class Auth0Config:
 
 
 class DbConfig:
-    host = 'localhost'
-    port = '5432'
-    user = 'postgres'
-    password = 'postgres'
-    db = 'postgres'
+    host = os.environ.get("DB_HOST", 'localhost')
+    port = os.environ.get("DB_PORT", '5432')
+    user = os.environ.get("DB_USER", 'postgres')
+    password = os.environ.get("DB_PASSWORD", 'postgres')
+    db = os.environ.get("DB_SCHEMA", 'postgres')
 
     @classmethod
     def generate_url(cls) -> str:
