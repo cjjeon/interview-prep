@@ -34,7 +34,7 @@ services:
       - PGID=1000
       - TZ=Canada/Pacific
       - URL=cjjeon.com
-      - SUBDOMAINS=interview-prep-api,
+      - SUBDOMAINS=interview-api,
       - VALIDATION=http
       - EMAIL=hello@cjjeon.com
       - ONLY_SUBDOMAINS=true
