@@ -6,13 +6,10 @@ services:
     ports:
       - 5000:5000
     environment:
-      - AUTH0_DOMAIN=
-      - AUTH0_AUDIENCE=
-      - DB_HOST=
-      - DB_PORT=
-      - DB_USER=
-      - DB_PASSWORD=
-      - DB_SCHEMA=
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
+      - DB_HOST=db
+      - DB_PASSWORD=${DB_PASSWORD}
     depends_on:
       - db
     restart: unless-stopped
@@ -26,7 +23,7 @@ services:
   db:
     image: postgres
     environment:
-      - POSTGRES_PASSWORD=
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     restart: always
     ports:
       - 5432:5432
