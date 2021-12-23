@@ -146,4 +146,5 @@ def graphql_server():
 
 if __name__ == "__main__":
     setup_logging()
+    logger.info("Flask Server has been started!!")
     app.run(host='0.0.0.0', port=5000)
