@@ -1,7 +1,9 @@
 from dao.company_dao import get_companies_by_user, create_company_by_user
+from logger import function_time_logging
 from model.models import GraphQLResolveInfo
 
 
+@function_time_logging
 def resolve_companies(_, info: GraphQLResolveInfo):
     user = info.context.user
     if user is None:
@@ -24,6 +26,7 @@ def resolve_companies(_, info: GraphQLResolveInfo):
     return payload
 
 
+@function_time_logging
 def resolve_create_company(_, info: GraphQLResolveInfo, name: str, description: str):
     user = info.context.user
     if user is None:

@@ -1,7 +1,9 @@
 from dao import get_user
+from logger import function_time_logging
 from model.models import GraphQLResolveInfo
 
 
+@function_time_logging
 def resolve_user(_, info: GraphQLResolveInfo):
     u = info.context.user
     if u is None:

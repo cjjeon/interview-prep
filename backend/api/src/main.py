@@ -1,4 +1,5 @@
 import json
+import logging
 from functools import wraps
 from urllib.request import urlopen
 
@@ -12,8 +13,11 @@ from werkzeug.exceptions import HTTPException
 from api.setup import schema
 from config import Auth0Config
 from dao import get_user, create_user
+from logger import setup_logging, function_time_logging
 from model.models import Auth0UserModel, GraphQLContext
 from setup import app
+
+logger = logging.getLogger(__name__)
 
 
 @app.errorhandler(Exception)
@@ -125,6 +129,7 @@ def graphql_playground():
 
 @app.route('/graphql', methods=['POST'])
 @requires_auth
+@function_time_logging
 def graphql_server():
     data = request.get_json()
     success, result = graphql_sync(
@@ -140,4 +145,5 @@ def graphql_server():
 
 
 if __name__ == "__main__":
+    setup_logging()
     app.run(host='0.0.0.0', port=5000)

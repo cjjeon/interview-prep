@@ -1,15 +1,18 @@
 from typing import List
 
 from db import CompanyDescription, Company
+from logger import function_time_logging
 from setup import db
 
 
+@function_time_logging
 def get_companies_by_user(user_id: str) -> List[CompanyDescription]:
     companies = CompanyDescription.query.filter_by(user_id=user_id).all()
 
     return companies
 
 
+@function_time_logging
 def create_company_by_user(name: str, description: str, user_id: str) -> CompanyDescription:
     company = Company()
     company.name = name
