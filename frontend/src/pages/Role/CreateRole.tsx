@@ -4,11 +4,29 @@ import InputText from "../../component/inputs/InputText"
 import FadeInOut from "../../component/transition/FadeInOut"
 import SimpleButton from "../../component/buttons/SimpleButton"
 import { FaWindowClose } from "react-icons/fa"
+import { gql, useMutation } from "@apollo/client"
+import { useParams } from "react-router-dom"
 
-const CreatePosition: React.FC = () => {
-    const [position, setPosition] = useState<string>("")
+const CREATE_ROLE = gql`
+    mutation CreateRole($companyId: ID!, $role: String!, $skills: [String]!) {
+        createRole(companyId: $companyId, role: $role, skills: $skills) {
+            success
+            errors
+            role {
+                id
+            }
+        }
+    }
+`
+
+const CreateRole: React.FC = () => {
+    const [role, setRole] = useState<string>("")
     const [skills, setSkills] = useState<string[]>([])
     const [skill, setSkill] = useState<string>("")
+
+    const { companyId } = useParams()
+
+    const [createRole] = useMutation(CREATE_ROLE)
 
     const addSkill = () => {
         if (skill) {
@@ -22,11 +40,27 @@ const CreatePosition: React.FC = () => {
     }
 
     const create = () => {
-        if (position === "") {
-            toast.error("Please enter the position!")
+        if (role === "") {
+            toast.error("Please enter the role!")
         } else if (skills.length === 0) {
             toast.error("Please add the skill")
         } else {
+            createRole({
+                variables: {
+                    companyId,
+                    role,
+                    skills,
+                },
+            }).then(({ data, errors }) => {
+                if (errors) {
+                    toast.error(errors)
+                } else {
+                    if (data && data.createRole.success) {
+                        toast.success("Success Creation")
+                        console.log(data)
+                    }
+                }
+            })
         }
     }
 
@@ -46,10 +80,10 @@ const CreatePosition: React.FC = () => {
                             <h3>What position you are applying for?</h3>
                             <InputText
                                 name={"position"}
-                                label={"Enter the name of position"}
-                                value={position}
+                                label={"Enter the name of role"}
+                                value={role}
                                 type={"text"}
-                                onChange={setPosition}
+                                onChange={setRole}
                             />
                         </div>,
                         <div className={"flex flex-col gap-4"}>
@@ -129,4 +163,4 @@ const CreatePosition: React.FC = () => {
     )
 }
 
-export default CreatePosition
+export default CreateRole

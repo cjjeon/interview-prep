@@ -1,5 +1,6 @@
 import logging
 import time
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +12,7 @@ def setup_logging():
     )
 
 
-def function_time_logging(func) -> object:
+def function_time_logging(func) -> Any:
     def wrapper(*args, **kwargs):
         ts = time.time()
         logger.info(f"function '{func.__name__}' started")

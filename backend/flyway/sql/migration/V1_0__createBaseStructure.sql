@@ -56,5 +56,8 @@ create table role_skill(
 	        references role,
     skill_id bigint not null
 	    constraint role_skill_skill_id_fk
-	        references skill
+	        references skill,
+    company_id bigint not null
+        constraint role_skill_company_id_fk
+            references company
 )

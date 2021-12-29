@@ -9,6 +9,23 @@ type Company {
     description: String!
 }
 
+type User {
+    email: String!
+    firstName: String!
+    lastName: String!
+}
+
+type Skill {
+    id: ID!
+    name: String!
+}
+
+type Role {
+    id: ID!
+    name: String!
+    skills: [Skill]
+}
+
 type CompanyResult {
     success: Boolean!
     errors: [String]
@@ -21,16 +38,16 @@ type CompaniesResult {
     companies: [Company]
 }
 
-type User {
-    email: String!
-    firstName: String!
-    lastName: String!
-}
-
 type UserResult {
     success: Boolean!
     errors: [String]
     user: User
+}
+
+type RoleResult {
+    success: Boolean!
+    errors: [String]
+    role: Role
 }
 
 type Query {
@@ -41,4 +58,5 @@ type Query {
 
 type Mutation {
     createCompany(name: String!, description: String!): CompanyResult!
+    createRole(companyId: ID!, role: String!, skills: [String]!): RoleResult!
 }

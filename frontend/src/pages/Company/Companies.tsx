@@ -5,6 +5,7 @@ import { COMPANY_CREATE_PAGE, CREATE_POSITION_PAGE } from "../../constant/routes
 import { Company } from "../../models/Company.model"
 import { gql, useQuery } from "@apollo/client"
 import { useAuth0 } from "@auth0/auth0-react"
+import { toast } from "react-toastify"
 
 const GET_COMPANIES = gql`
     query GetCompanies {
@@ -21,7 +22,7 @@ const GET_COMPANIES = gql`
 `
 
 const Companies: React.FC = () => {
-    const { data, loading } = useQuery(GET_COMPANIES)
+    const { data, loading, error } = useQuery(GET_COMPANIES)
 
     const [companies, setCompanies] = useState<Company[]>([])
 
@@ -30,14 +31,18 @@ const Companies: React.FC = () => {
 
     useEffect(() => {
         if (!loading) {
-            if (!isAuthenticated) {
-                navigate(COMPANY_CREATE_PAGE.path)
-            } else if (data && data.companies.success) {
-                const c = data.companies.companies
-                if (c.length > 0) {
-                    setCompanies(c)
-                } else {
+            if (error) {
+                toast.error(error.message)
+            } else {
+                if (!isAuthenticated) {
                     navigate(COMPANY_CREATE_PAGE.path)
+                } else if (data && data.companies.success) {
+                    const c = data.companies.companies
+                    if (c.length > 0) {
+                        setCompanies(c)
+                    } else {
+                        navigate(COMPANY_CREATE_PAGE.path)
+                    }
                 }
             }
         }

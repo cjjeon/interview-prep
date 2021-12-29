@@ -3,7 +3,7 @@ import Login from "../pages/Login"
 import MainPage from "../pages/MainPage"
 import Companies from "../pages/Company/Companies"
 import CreateCompany from "../pages/Company/CreateCompany"
-import CreatePosition from "../pages/Position/CreatePosition"
+import CreateRole from "../pages/Role/CreateRole"
 import Logout from "../pages/Logout"
 
 interface IRoute {
@@ -37,10 +37,10 @@ export const COMPANY_CREATE_PAGE: IRoute = {
     component: <CreateCompany />,
 }
 
-// Position Page
+// Role Page
 export const CREATE_POSITION_PAGE: IRoute = {
     path: "/company/:companyId/position/create",
-    component: <CreatePosition />,
+    component: <CreateRole />,
 }
 
 export const ROUTES: IRoute[] = [
