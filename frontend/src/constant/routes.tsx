@@ -39,7 +39,7 @@ export const COMPANY_CREATE_PAGE: IRoute = {
 
 // Role Page
 export const CREATE_POSITION_PAGE: IRoute = {
-    path: "/company/:companyId/position/create",
+    path: "/company/:companyDescriptionId/position/create",
     component: <CreateRole />,
 }
 

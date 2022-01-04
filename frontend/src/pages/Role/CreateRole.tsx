@@ -1,18 +1,31 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import InputText from "../../component/inputs/InputText"
 import FadeInOut from "../../component/transition/FadeInOut"
 import SimpleButton from "../../component/buttons/SimpleButton"
 import { FaWindowClose } from "react-icons/fa"
-import { gql, useMutation } from "@apollo/client"
+import { gql, useMutation, useQuery } from "@apollo/client"
 import { useParams } from "react-router-dom"
+import InputTextWithOptions from "../../component/inputs/InputTextWithOptions"
+
+const GET_ROLES_SKILLS = gql`
+    query searchRoles($roleFilterName: String, $skillFilterName: String) {
+        searchRoles(filterName: $roleFilterName) {
+            roles {
+                name
+            }
+        }
+        searchSkills(filterName: $skillFilterName) {
+            skills {
+                name
+            }
+        }
+    }
+`
 
 const CREATE_ROLE = gql`
-    mutation CreateRole($companyId: ID!, $role: String!, $skills: [String]!) {
-        createRole(companyId: $companyId, role: $role, skills: $skills) {
-            success
-            errors
-            role {
+    mutation CreateRole($companyDescriptionId: ID!, $role: String!, $skills: [String]!) {
+        createRole(companyDescriptionId: $companyDescriptionId, role: $role, skills: $skills) {
+            roleSkill {
                 id
             }
         }
@@ -24,9 +37,19 @@ const CreateRole: React.FC = () => {
     const [skills, setSkills] = useState<string[]>([])
     const [skill, setSkill] = useState<string>("")
 
-    const { companyId } = useParams()
+    const { companyDescriptionId } = useParams()
 
+    const { data, loading, refetch } = useQuery(GET_ROLES_SKILLS, {
+        variables: { roleFilterName: "", skillFilterName: "" },
+    })
     const [createRole] = useMutation(CREATE_ROLE)
+
+    useEffect(() => {
+        refetch({
+            roleFilterName: role,
+            skillFilterName: skill,
+        }).then()
+    }, [role, skill])
 
     const addSkill = () => {
         if (skill) {
@@ -47,7 +70,7 @@ const CreateRole: React.FC = () => {
         } else {
             createRole({
                 variables: {
-                    companyId,
+                    companyDescriptionId,
                     role,
                     skills,
                 },
@@ -55,9 +78,9 @@ const CreateRole: React.FC = () => {
                 if (errors) {
                     toast.error(errors)
                 } else {
-                    if (data && data.createRole.success) {
-                        toast.success("Success Creation")
+                    if (data && data.createRole) {
                         console.log(data)
+                        toast.success("Success Creation")
                     }
                 }
             })
@@ -78,12 +101,20 @@ const CreateRole: React.FC = () => {
                     components={[
                         <div>
                             <h3>What position you are applying for?</h3>
-                            <InputText
+                            <InputTextWithOptions
                                 name={"position"}
                                 label={"Enter the name of role"}
                                 value={role}
                                 type={"text"}
                                 onChange={setRole}
+                                options={
+                                    loading
+                                        ? []
+                                        : data && data?.searchRoles && data?.searchRoles?.roles
+                                        ? data.searchRoles.roles.map((role: any) => role.name)
+                                        : []
+                                }
+                                background={"transparent"}
                             />
                         </div>,
                         <div className={"flex flex-col gap-4"}>
@@ -137,17 +168,20 @@ const CreateRole: React.FC = () => {
                             </div>
                             <div className={"flex gap-3"}>
                                 <div className={"flex-grow"}>
-                                    <InputText
+                                    <InputTextWithOptions
                                         name={"jobSkills"}
                                         label={"Enter Job Requirement or Responsibility"}
                                         value={skill}
                                         type={"text"}
                                         onChange={setSkill}
-                                        onKeyPress={(event) => {
-                                            if (event.key === "Enter") {
-                                                addSkill()
-                                            }
-                                        }}
+                                        options={
+                                            loading
+                                                ? []
+                                                : data && data?.searchSkills && data?.searchSkills?.skills
+                                                ? data.searchSkills.skills.map((skill: any) => skill.name)
+                                                : []
+                                        }
+                                        background={"transparent"}
                                     />
                                 </div>
                                 <div className={"flex-nonw w-24"}>
