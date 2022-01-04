@@ -1,50 +1,49 @@
-from dao.company_dao import get_companies_by_user, create_company_by_user
+import logging
+
+from ariadne import convert_kwargs_to_snake_case
+
+from dao.company_dao import get_company_descriptions_by_user, create_company_description_by_user, get_companies_by_name
 from logger import function_time_logging
 from model.models import GraphQLResolveInfo
 
+logger = logging.getLogger(__name__)
+
 
 @function_time_logging
-def resolve_companies(_, info: GraphQLResolveInfo):
-    user = info.context.user
-    if user is None:
+@convert_kwargs_to_snake_case
+def query_search_companies(*_, filter_name: str):
+    if filter_name == '':
         return {
-            'success': False,
-            'errors': ['Require login. Please try again after login.']
+            'companies': []
         }
-
-    payload = {
-        'success': True,
+    
+    companies = get_companies_by_name(filter_name)
+    return {
+        'companies': [company.to_dict() for company in companies]
     }
 
-    try:
-        companies = get_companies_by_user(user.user_id)
-        payload['companies'] = [company.to_dict() for company in companies]
-    except Exception:
-        payload['success'] = False
-        payload['errors'] = ["Fail to fetch list of companies for the user"]
 
-    return payload
+@function_time_logging
+def query_company_descriptions(_, info: GraphQLResolveInfo):
+    user = info.context.user
+    if user is None:
+        raise PermissionError("Unable to find the user information")
+
+    company_descriptions = get_company_descriptions_by_user(user.user_id)
+
+    return {
+        'company_descriptions': [company_description.to_dict() for company_description in company_descriptions]
+    }
 
 
 @function_time_logging
-def resolve_create_company(_, info: GraphQLResolveInfo, name: str, description: str):
+def mutation_create_company_description(_, info: GraphQLResolveInfo, name: str, description: str):
     user = info.context.user
     if user is None:
-        return {
-            'success': False,
-            'errors': ['Require login. Please try again after login.']
-        }
+        raise PermissionError("Unable to find the user information")
 
-    try:
-        company = create_company_by_user(name, description, user.user_id)
-        payload = {
-            'success': True,
-            'company': company.to_dict()
-        }
-    except Exception:
-        payload = {
-            'success': False,
-            'errors': ['Fail to create company']
-        }
+    company_description = create_company_description_by_user(name, description, user.user_id)
 
-    return payload
+    return {
+        'company_description': company_description.to_dict()
+    }

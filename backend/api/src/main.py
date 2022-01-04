@@ -15,13 +15,15 @@ from config import Auth0Config
 from dao import get_user, create_user
 from logger import setup_logging, function_time_logging
 from model.models import Auth0UserModel, GraphQLContext
-from setup import app
+from setup import app, db
 
 logger = logging.getLogger(__name__)
 
 
 @app.errorhandler(Exception)
 def handle_auth_error(ex):
+    db.session.rollback()
+    logger.error(ex)
     response = jsonify(message=str(ex))
     response.status_code = (ex.code if isinstance(ex, HTTPException) else 500)
     return response
@@ -99,20 +101,29 @@ def requires_auth(f):
                                      "Unable to parse authentication"
                                      " token."}, 401)
 
-            # After validating payload
-            # Get a user information from Auth0 API
-            response = requests.get(f"{Auth0Config.AUTH0_AUDIENCE}users/{payload['sub']}",
-                                    headers={'Authorization': f'Bearer {token}'})
-            response_json = response.json()
-            if get_user(response_json['user_id']) is None:
+            user = get_user(payload['sub'])
+
+            if user is None:
+                # After validating payload
+                # Get a user information from Auth0 API
+                response = requests.get(f"{Auth0Config.AUTH0_AUDIENCE}users/{payload['sub']}",
+                                        headers={'Authorization': f'Bearer {token}'})
+                response_json = response.json()
                 create_user(response_json['user_id'], response_json['email'], response_json['given_name'],
                             response_json['family_name'])
-            _request_ctx_stack.top.current_user = Auth0UserModel(
-                user_id=response_json['user_id'],
-                email=response_json['email'],
-                first_name=response_json['given_name'],
-                last_name=response_json['family_name']
-            )
+                _request_ctx_stack.top.current_user = Auth0UserModel(
+                    user_id=response_json['user_id'],
+                    email=response_json['email'],
+                    first_name=response_json['given_name'],
+                    last_name=response_json['family_name']
+                )
+            else:
+                _request_ctx_stack.top.current_user = Auth0UserModel(
+                    user_id=user.id,
+                    email=user.email,
+                    first_name=user.first_name,
+                    last_name=user.last_name
+                )
 
             return f(*args, **kwargs)
 

@@ -1,18 +1,26 @@
-import React, { useState } from "react"
-import InputText from "../../component/inputs/InputText"
+import React, { useEffect, useState } from "react"
 import FadeInOut from "../../component/transition/FadeInOut"
 import InputTextArea from "../../component/inputs/InputTextArea"
 import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
-import { gql, useMutation } from "@apollo/client"
+import { gql, useMutation, useQuery } from "@apollo/client"
 import { CREATE_POSITION_PAGE } from "../../constant/routes"
+import InputTextWithOptions from "../../component/inputs/InputTextWithOptions"
+
+const GET_COMPANIES = gql`
+    query GetCompanies($filterName: String) {
+        searchCompanies(filterName: $filterName) {
+            companies {
+                name
+            }
+        }
+    }
+`
 
 const CREATE_COMPANY = gql`
     mutation CreateCompany($name: String!, $description: String!) {
-        createCompany(name: $name, description: $description) {
-            success
-            errors
-            company {
+        createCompanyDescription(name: $name, description: $description) {
+            companyDescription {
                 id
             }
         }
@@ -23,9 +31,18 @@ const CreateCompany: React.FC = () => {
     const [name, setName] = useState<string>("")
     const [description, setDescription] = useState<string>("")
 
+    const { data, loading, refetch } = useQuery(GET_COMPANIES, {
+        variables: { filterName: "" },
+    })
     const [createCompany] = useMutation(CREATE_COMPANY)
 
     const navigate = useNavigate()
+
+    useEffect(() => {
+        refetch({
+            filterName: name,
+        }).then()
+    }, [name])
 
     const create = () => {
         if (name === "") {
@@ -42,8 +59,13 @@ const CreateCompany: React.FC = () => {
                 if (errors) {
                     toast.error(errors)
                 } else {
-                    if (data && data.createCompany.success) {
-                        navigate(CREATE_POSITION_PAGE.path.replace(":companyId", data.createCompany.company.id))
+                    if (data && data.createCompanyDescription) {
+                        navigate(
+                            CREATE_POSITION_PAGE.path.replace(
+                                ":companyDescriptionId",
+                                data.createCompanyDescription.companyDescription.id
+                            )
+                        )
                     }
                 }
             })
@@ -64,12 +86,19 @@ const CreateCompany: React.FC = () => {
                     components={[
                         <div>
                             <div>What's the name of the company?</div>
-                            <InputText
+                            <InputTextWithOptions
                                 name={"company-name"}
                                 label={"Enter name of the company"}
                                 value={name}
                                 type={"text"}
                                 onChange={(value) => setName(value)}
+                                options={
+                                    loading
+                                        ? []
+                                        : data && data?.searchCompanies && data?.searchCompanies?.companies
+                                        ? data.searchCompanies.companies.map((company: any) => company.name)
+                                        : []
+                                }
                                 background={"transparent"}
                             />
                         </div>,

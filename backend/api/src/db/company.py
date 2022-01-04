@@ -10,6 +10,12 @@ class Company(db.Model):
     created_at = db.Column('created_at', db.DateTime(timezone=True), default=datetime.datetime.utcnow())
     name = db.Column('name', db.String)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
 
 class CompanyDescription(db.Model):
     __tablename__ = 'company_description'
@@ -22,10 +28,11 @@ class CompanyDescription(db.Model):
 
     company = db.relationship('Company')
     user = db.relationship('User')
+    roles = db.relationship('CompanyDescriptionRoleSkill', back_populates="roles")
 
     def to_dict(self):
         return {
             'id': self.id,
-            'name': self.company.name,
             'description': self.description,
+            'company': self.company.to_dict(),
         }

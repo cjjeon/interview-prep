@@ -2,20 +2,19 @@ import React, { useEffect, useState } from "react"
 import Loading from "../../component/loading/Loading"
 import { useNavigate } from "react-router-dom"
 import { COMPANY_CREATE_PAGE, CREATE_POSITION_PAGE } from "../../constant/routes"
-import { Company } from "../../models/Company.model"
 import { gql, useQuery } from "@apollo/client"
 import { useAuth0 } from "@auth0/auth0-react"
 import { toast } from "react-toastify"
 
 const GET_COMPANIES = gql`
-    query GetCompanies {
-        companies {
-            success
-            errors
-            companies {
+    query GetCompanyDescriptions {
+        companyDescriptions {
+            companyDescriptions {
                 id
-                name
                 description
+                company {
+                    name
+                }
             }
         }
     }
@@ -24,7 +23,15 @@ const GET_COMPANIES = gql`
 const Companies: React.FC = () => {
     const { data, loading, error } = useQuery(GET_COMPANIES)
 
-    const [companies, setCompanies] = useState<Company[]>([])
+    const [companyDescriptions, setCompanyDescriptions] = useState<
+        {
+            id: number
+            description: string
+            company: {
+                name: string
+            }
+        }[]
+    >([])
 
     const { isAuthenticated } = useAuth0()
     const navigate = useNavigate()
@@ -36,10 +43,10 @@ const Companies: React.FC = () => {
             } else {
                 if (!isAuthenticated) {
                     navigate(COMPANY_CREATE_PAGE.path)
-                } else if (data && data.companies.success) {
-                    const c = data.companies.companies
+                } else if (data && data.companyDescriptions) {
+                    const c = data.companyDescriptions.companyDescriptions
                     if (c.length > 0) {
-                        setCompanies(c)
+                        setCompanyDescriptions(c)
                     } else {
                         navigate(COMPANY_CREATE_PAGE.path)
                     }
@@ -49,7 +56,7 @@ const Companies: React.FC = () => {
     }, [isAuthenticated, data, loading, navigate])
 
     const goToCompany = (companyId: number) => {
-        navigate(CREATE_POSITION_PAGE.path.replace(":companyId", companyId.toString()))
+        navigate(CREATE_POSITION_PAGE.path.replace(":companyDescriptionId", companyId.toString()))
     }
 
     if (loading) {
@@ -59,16 +66,16 @@ const Companies: React.FC = () => {
     return (
         <div className={"flex flex-col justify-center items-center text-center gap-2"}>
             <div className={"text-lg"}>Companies that you applied in the past:</div>
-            {companies.map((company, index) => {
+            {companyDescriptions.map((companyDescription, index) => {
                 return (
                     <div
                         key={index}
                         className={"p-2 w-64 border-4 rounded-lg border-yellow-300 cursor-pointer"}
                         onClick={() => {
-                            return company.id ? goToCompany(company.id) : null
+                            return companyDescription.id ? goToCompany(companyDescription.id) : null
                         }}
                     >
-                        {company.name}
+                        {companyDescription.company.name}
                     </div>
                 )
             })}

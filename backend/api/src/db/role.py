@@ -1,13 +1,8 @@
 from datetime import datetime
 
-from setup import db
+from sqlalchemy.ext.associationproxy import association_proxy
 
-Role_Skill = db.Table(
-    'role_skill',
-    db.Column('role_id', db.Integer, db.ForeignKey('role.id'), nullable=False),
-    db.Column('skill_id', db.Integer, db.ForeignKey('skill.id'), nullable=False),
-    db.Column('company_id', db.Integer, db.ForeignKey('company.id'), nullable=False)
-)
+from setup import db
 
 
 class Role(db.Model):
@@ -17,8 +12,7 @@ class Role(db.Model):
     created_at = db.Column('created_at', db.DateTime(timezone=True), default=datetime.utcnow())
     name = db.Column('name', db.String)
 
-    skills = db.relationship('Skill', secondary=Role_Skill, lazy='joined', backref='role')
-    company = db.relationship('Company', secondary=Role_Skill, lazy='joined', backref='role')
+    skills = association_proxy('company_description_role_skills', 'skill')
 
     def to_dict(self):
         return {
