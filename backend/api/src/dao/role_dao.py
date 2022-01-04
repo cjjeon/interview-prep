@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from sqlalchemy import func
 
-from db import Role, Skill, CompanyDescription
+from db import Role, Skill, CompanyDescription, CompanyDescriptionRoleSkill
 from logger import function_time_logging
 from setup import db
 
@@ -18,7 +18,7 @@ def get_roles_by_name(name: str, limit: int = 5) -> List[Role]:
 
 
 @function_time_logging
-def create_role(name: str) -> Role:
+def create_or_get_role(name: str) -> Role:
     role = get_role_by_name(name)
     if role is None:
         role = Role()
@@ -40,7 +40,7 @@ def get_skills_by_name(name: str, limit: int = 5) -> List[Skill]:
 
 
 @function_time_logging
-def create_skills(skill_names: List[str]) -> List[Skill]:
+def create_or_get_skills(skill_names: List[str]) -> List[Skill]:
     skills = []
     for skill_name in skill_names:
         skill = get_skill_by_name(skill_name)
@@ -63,28 +63,30 @@ def create_role_skills(role_name: str, skill_names: List[str], company_descripti
     if company_description is None:
         raise Exception("Unable to find the company description")
 
-    role = create_role(role_name)
+    role = create_or_get_role(role_name)
+    skills = create_or_get_skills(skill_names)
+
     role_exists = False
-    for company_description_role in company_description.roles:
-        if company_description_role.name == role.name:
+    for company_role in company_description.roles:
+        if company_role.name == role_name:
             role_exists = True
-            role = company_description_role
 
-    skills = create_skills(skill_names)
-    for skill in skills:
-        skill_exists = False
-        for role_skill in role.skills:
-            if skill.name == role_skill.name:
-                skill_exists = True
+            for skill in skills:
+                skill_exists = False
+                for company_role_skill in company_role.skills:
+                    if skill.name == company_role_skill.name:
+                        skill_exists = True
 
-        if not skill_exists:
-            role.skills.append(skill)
+                if not skill_exists:
+                    company_role.skills.append(skill)
 
     if not role_exists:
-        company_description.roles.append(role)
-    print("A")
-    print([role.to_dict() for role in company_description.roles])
-
+        for skill in skills:
+            db.session.add(CompanyDescriptionRoleSkill(
+                company_description_id=company_description.id,
+                role_id=role.id,
+                skill_id=skill.id,
+            ))
     db.session.commit()
 
     return role

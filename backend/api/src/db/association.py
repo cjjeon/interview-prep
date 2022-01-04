@@ -11,6 +11,6 @@ class CompanyDescriptionRoleSkill(db.Model):
 
     __table_args__ = (db.UniqueConstraint(company_description_id, role_id, skill_id),)
 
-    company_description = db.relationship('CompanyDescription', backref="company_description_role_skills")
-    roles = db.relationship('Role', back_populates="")
-    skill = db.relationship('Skill', lazy=True, backref="company_description_role_skills")
+    company_description = db.relationship('CompanyDescription', backref='company_description_association')
+    role = db.relationship('Role', backref='role_association')
+    skill = db.relationship('Skill', backref='skill_association')

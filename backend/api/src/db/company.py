@@ -28,7 +28,7 @@ class CompanyDescription(db.Model):
 
     company = db.relationship('Company')
     user = db.relationship('User')
-    roles = db.relationship('CompanyDescriptionRoleSkill', back_populates="roles")
+    roles = db.relationship('Role', secondary='company_description_role_skill')
 
     def to_dict(self):
         return {
