@@ -9,7 +9,7 @@ app = Flask(__name__, static_url_path='/public', static_folder='./public')
 app.config['SQLALCHEMY_DATABASE_URI'] = DbConfig.generate_url()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-CORS(app, resource={"*": {"origins": ["http://localhost:3000", "https://interview.cjjeon.com"]}})
+CORS(app, resource={"*": {"origins": ["http://localhost:3000"]}})
 
 # Setting up database
 db = SQLAlchemy(app)

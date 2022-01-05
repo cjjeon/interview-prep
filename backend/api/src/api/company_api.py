@@ -30,7 +30,6 @@ def query_company_descriptions(_, info: GraphQLResolveInfo):
         raise PermissionError("Unable to find the user information")
 
     company_descriptions = get_company_descriptions_by_user(user.user_id)
-    print(company_descriptions[0].roles[0].skills)
     return {
         'company_descriptions': [company_description.to_dict() for company_description in company_descriptions]
     }

@@ -53,7 +53,7 @@ const Companies: React.FC = () => {
                 }
             }
         }
-    }, [isAuthenticated, data, loading, navigate])
+    }, [isAuthenticated, data, loading, navigate, error])
 
     const goToCompany = (companyId: number) => {
         navigate(CREATE_POSITION_PAGE.path.replace(":companyDescriptionId", companyId.toString()))

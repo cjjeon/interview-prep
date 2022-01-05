@@ -2,9 +2,10 @@ import React from "react"
 import Login from "../pages/Login"
 import MainPage from "../pages/MainPage"
 import Companies from "../pages/Company/Companies"
-import CreateCompany from "../pages/Company/CreateCompany"
-import CreateRole from "../pages/Role/CreateRole"
+import CreateCompany from "../pages/CreateCompany"
+import CreateRole from "../pages/CreateRole"
 import Logout from "../pages/Logout"
+import Interview from "../pages/Interview"
 
 interface IRoute {
     path: string
@@ -43,10 +44,17 @@ export const CREATE_POSITION_PAGE: IRoute = {
     component: <CreateRole />,
 }
 
+// Role Page
+export const INTERVIEW_PAGE: IRoute = {
+    path: "/company/:companyDescriptionId/position/:roleId",
+    component: <Interview />,
+}
+
 export const ROUTES: IRoute[] = [
     COMPANY_LIST_PAGE,
     COMPANY_CREATE_PAGE,
     CREATE_POSITION_PAGE,
+    INTERVIEW_PAGE,
     LOGIN_PAGE,
     LOGOUT_PAGE,
     MAIN_PAGE,

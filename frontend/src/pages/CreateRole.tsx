@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { toast } from "react-toastify"
-import FadeInOut from "../../component/transition/FadeInOut"
-import SimpleButton from "../../component/buttons/SimpleButton"
+import FadeInOut from "../component/transition/FadeInOut"
+import SimpleButton from "../component/buttons/SimpleButton"
 import { FaWindowClose } from "react-icons/fa"
 import { gql, useMutation, useQuery } from "@apollo/client"
-import { useParams } from "react-router-dom"
-import InputTextWithOptions from "../../component/inputs/InputTextWithOptions"
+import { useNavigate, useParams } from "react-router-dom"
+import InputTextWithOptions from "../component/inputs/InputTextWithOptions"
+import { INTERVIEW_PAGE } from "../constant/routes"
 
 const GET_ROLES_SKILLS = gql`
     query searchRoles($roleFilterName: String, $skillFilterName: String) {
@@ -37,19 +38,20 @@ const CreateRole: React.FC = () => {
     const [skills, setSkills] = useState<string[]>([])
     const [skill, setSkill] = useState<string>("")
 
-    const { companyDescriptionId } = useParams()
-
     const { data, loading, refetch } = useQuery(GET_ROLES_SKILLS, {
         variables: { roleFilterName: "", skillFilterName: "" },
     })
     const [createRole] = useMutation(CREATE_ROLE)
+
+    const navigate = useNavigate()
+    const { companyDescriptionId } = useParams()
 
     useEffect(() => {
         refetch({
             roleFilterName: role,
             skillFilterName: skill,
         }).then()
-    }, [role, skill])
+    }, [role, skill, refetch])
 
     const addSkill = () => {
         if (skill) {
@@ -63,6 +65,7 @@ const CreateRole: React.FC = () => {
     }
 
     const create = () => {
+        if (!companyDescriptionId) return null
         if (role === "") {
             toast.error("Please enter the role!")
         } else if (skills.length === 0) {
@@ -79,8 +82,11 @@ const CreateRole: React.FC = () => {
                     toast.error(errors)
                 } else {
                     if (data && data.createRole) {
-                        console.log(data)
-                        toast.success("Success Creation")
+                        navigate(
+                            INTERVIEW_PAGE.path
+                                .replace(":companyDescriptionId", companyDescriptionId)
+                                .replace(":roleId", data.createRole.roleSkill.id)
+                        )
                     }
                 }
             })

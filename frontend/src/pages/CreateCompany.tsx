@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react"
-import FadeInOut from "../../component/transition/FadeInOut"
-import InputTextArea from "../../component/inputs/InputTextArea"
+import FadeInOut from "../component/transition/FadeInOut"
+import InputTextArea from "../component/inputs/InputTextArea"
 import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
 import { gql, useMutation, useQuery } from "@apollo/client"
-import { CREATE_POSITION_PAGE } from "../../constant/routes"
-import InputTextWithOptions from "../../component/inputs/InputTextWithOptions"
+import { CREATE_POSITION_PAGE } from "../constant/routes"
+import InputTextWithOptions from "../component/inputs/InputTextWithOptions"
 
 const GET_COMPANIES = gql`
     query GetCompanies($filterName: String) {
@@ -42,7 +42,7 @@ const CreateCompany: React.FC = () => {
         refetch({
             filterName: name,
         }).then()
-    }, [name])
+    }, [name, refetch])
 
     const create = () => {
         if (name === "") {

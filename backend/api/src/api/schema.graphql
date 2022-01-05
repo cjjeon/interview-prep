@@ -13,7 +13,6 @@ type CompanyDescription {
     description: String!
     company: Company!
 }
-
 type User {
     email: String!
     firstName: String!
@@ -33,6 +32,15 @@ type Role {
 type RoleSkills {
     id: ID!
     name: String!
+    skills: [Skill]
+}
+
+type Experience {
+    id: ID!
+    summary: String!
+    situation: String
+    action: String
+    outcome: String
     skills: [Skill]
 }
 
@@ -64,12 +72,17 @@ type SkillsResult {
     skills: [Skill]
 }
 
+type ExperienceResult {
+    experiences: [Experience]
+}
+
 type Query {
     searchCompanies(filterName: String): CompaniesResult
     companyDescriptions: CompanyDescriptionsResult!
     companyDescription(companyId: ID!): CompanyDescriptionResult!
     searchRoles(filterName: String): RolesResult
     searchSkills(filterName: String): SkillsResult
+    experiences(companyDescriptionId: ID, roleId: ID): ExperienceResult!
     user: UserResult!
 }
 
