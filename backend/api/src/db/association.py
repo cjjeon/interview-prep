@@ -14,3 +14,16 @@ class CompanyDescriptionRoleSkill(db.Model):
     company_description = db.relationship('CompanyDescription', backref='company_description_association')
     role = db.relationship('Role', backref='role_association')
     skill = db.relationship('Skill', backref='skill_association')
+
+
+class ExperienceSkill(db.Model):
+    __tablename__ = 'experience_skill'
+
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    experience_id = db.Column('experience_id', db.Integer, db.ForeignKey('experience.id'))
+    skill_id = db.Column('skill_id', db.Integer, db.ForeignKey('skill.id'))
+
+    __table_args__ = (db.UniqueConstraint(experience_id, skill_id),)
+
+    experience = db.relationship('Experience', backref='experience_association')
+    skill = db.relationship('Skill', backref='skill_association')

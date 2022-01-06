@@ -41,7 +41,6 @@ type Experience {
     situation: String
     action: String
     outcome: String
-    skills: [Skill]
 }
 
 type CompaniesResult {
@@ -73,6 +72,10 @@ type SkillsResult {
 }
 
 type ExperienceResult {
+    experience: Experience
+}
+
+type ExperiencesResult {
     experiences: [Experience]
 }
 
@@ -81,12 +84,13 @@ type Query {
     companyDescriptions: CompanyDescriptionsResult!
     companyDescription(companyId: ID!): CompanyDescriptionResult!
     searchRoles(filterName: String): RolesResult
-    searchSkills(filterName: String): SkillsResult
-    experiences(companyDescriptionId: ID, roleId: ID): ExperienceResult!
+    experiences(companyDescriptionId: ID, roleId: ID): ExperiencesResult!
+    skills(filterName: String, companyDescriptionId: ID, roleId: ID, limit: Int): SkillsResult!
     user: UserResult!
 }
 
 type Mutation {
     createCompanyDescription(name: String!, description: String!): CompanyDescriptionResult!
     createRole(companyDescriptionId: ID!, role: String!, skills: [String]!): RoleSkillsResult!
+    createExperience(summary: String!, situation: String!, action: String!, outcome: String!, skills: [String]!):  ExperienceResult!
 }

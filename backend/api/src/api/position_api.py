@@ -1,9 +1,9 @@
 import logging
-from typing import List
+from typing import List, Optional
 
 from ariadne import convert_kwargs_to_snake_case
 
-from dao.role_dao import create_role_skills, get_roles_by_name, get_skills_by_name
+from dao.role_dao import create_role_skills, get_roles_by_name, get_skills
 from logger import function_time_logging
 from model.models import GraphQLResolveInfo
 
@@ -26,13 +26,13 @@ def query_get_roles(_, info: GraphQLResolveInfo, filter_name: str):
 
 @function_time_logging
 @convert_kwargs_to_snake_case
-def query_get_skills(_, info: GraphQLResolveInfo, filter_name: str):
-    if filter_name == '':
-        return {
-            'skills': []
-        }
+def query_skills(_, info: GraphQLResolveInfo, filter_name: Optional[str] = None,
+                 company_description_id: Optional[int] = None,
+                 role_id: Optional[int] = None,
+                 limit: int = 5):
+    user = info.context.user
 
-    skills = get_skills_by_name(filter_name)
+    skills = get_skills(user.user_id, filter_name, company_description_id, role_id, limit)
     return {
         'skills': [skill.to_dict() for skill in skills]
     }

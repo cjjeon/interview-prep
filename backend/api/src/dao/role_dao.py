@@ -40,6 +40,40 @@ def get_skills_by_name(name: str, limit: int = 5) -> List[Skill]:
 
 
 @function_time_logging
+def get_skills(
+        user_id: str,
+        filter_name: Optional[str] = None,
+        company_description_id: Optional[int] = None,
+        role_id: Optional[int] = None,
+        limit: int = 5
+) -> List[Skill]:
+    if company_description_id is None and role_id is None:
+        if filter_name == '' or filter_name is None:
+            return []
+        return Skill.query.filter(Skill.name.ilike(f"{filter_name}%")).order_by(Skill.name).limit(limit).all()
+
+    query = Skill.query \
+        .join(CompanyDescriptionRoleSkill, Skill.id == CompanyDescriptionRoleSkill.skill_id)
+
+    if role_id or company_description_id:
+        query = query.join(CompanyDescription,
+                           CompanyDescriptionRoleSkill.company_description_id == CompanyDescription.id)
+        query = query.filter(CompanyDescription.user_id == user_id)
+
+    if company_description_id:
+        query = query.filter(CompanyDescriptionRoleSkill.company_description_id == company_description_id)
+
+    if role_id:
+        query = query.filter(CompanyDescriptionRoleSkill.role_id == role_id)
+
+    skills = query.order_by(Skill.name).all()
+
+    if len(skills) > limit:
+        return skills[:5]
+    return skills
+
+
+@function_time_logging
 def create_or_get_skills(skill_names: List[str]) -> List[Skill]:
     skills = []
     for skill_name in skill_names:

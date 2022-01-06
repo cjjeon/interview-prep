@@ -15,7 +15,7 @@ const GET_ROLES_SKILLS = gql`
                 name
             }
         }
-        searchSkills(filterName: $skillFilterName) {
+        skills(filterName: $skillFilterName) {
             skills {
                 name
             }
@@ -54,7 +54,7 @@ const CreateRole: React.FC = () => {
     }, [role, skill, refetch])
 
     const addSkill = () => {
-        if (skill) {
+        if (skill && !skills.includes(skill)) {
             setSkills((prevState) => [...prevState, skill])
             setSkill("")
         }
@@ -183,8 +183,8 @@ const CreateRole: React.FC = () => {
                                         options={
                                             loading
                                                 ? []
-                                                : data && data?.searchSkills && data?.searchSkills?.skills
-                                                ? data.searchSkills.skills.map((skill: any) => skill.name)
+                                                : data && data?.skills && data?.skills?.skills
+                                                ? data.skills.skills.map((skill: any) => skill.name)
                                                 : []
                                         }
                                         background={"transparent"}

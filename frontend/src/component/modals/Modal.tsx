@@ -1,22 +1,24 @@
 import React, { useEffect } from "react"
+import { IoCloseOutline } from "react-icons/io5"
 import { CSSTransition } from "react-transition-group"
-
-import SimpleButton from "../buttons/SimpleButton"
 import "./Modal.css"
 
 interface ModalProps {
     isOpen: boolean
-    setIsOpen: (open: boolean) => void
     title: string
+    onClose: () => void
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, setIsOpen, title, children }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, title, onClose, children }) => {
     const nodeRef = React.useRef<HTMLDivElement>(null)
     const modalRef = React.useRef<HTMLDivElement>(null)
+
     useEffect(() => {
+        // This is method to see if the user click outside of the modal which will make
+        // the model close.
         function handleClickOutside(event: MouseEvent) {
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                setIsOpen(false)
+                onClose()
             }
         }
 
@@ -24,7 +26,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, setIsOpen, title, children }) => 
         return () => {
             document.removeEventListener("mousedown", handleClickOutside)
         }
-    }, [modalRef, setIsOpen])
+    }, [modalRef, onClose])
 
     return (
         <CSSTransition
@@ -43,16 +45,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, setIsOpen, title, children }) => 
                 <div className={"fixed z-10 inset-0 overflow-y-auto"}>
                     <div className={"flex justify-center items-center w-full h-full text-left"}>
                         <div ref={modalRef} className={"flex flex-col gap-3 bg-white w-2/3 rounded-lg p-5"}>
-                            <div className={"text-lg leading-6 font-medium text-gray-900"}>{title}</div>
-                            <div>{children}</div>
-                            <div className={"flex gap-2"}>
-                                <div className={"w-16"}>
-                                    <SimpleButton label={"Okay"} onClick={() => setIsOpen(false)} />
-                                </div>
-                                <div className={"w-16"}>
-                                    <SimpleButton color={"red"} label={"Close"} onClick={() => setIsOpen(false)} />
+                            <div className={"flex justify-between gap-2"}>
+                                <div className={"text-lg leading-6 font-medium text-gray-900"}>{title}</div>
+                                <div className={"bg-red-200 rounded cursor-pointer"} onClick={onClose}>
+                                    <IoCloseOutline size={25} />
                                 </div>
                             </div>
+                            <div>{children}</div>
                         </div>
                     </div>
                 </div>

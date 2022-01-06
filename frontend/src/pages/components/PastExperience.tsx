@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
 import SimpleButton from "../../component/buttons/SimpleButton"
 import Modal from "../../component/modals/Modal"
+import AddExperience from "./AddExperience"
 
 interface Experience {
     id: number
@@ -37,8 +38,16 @@ const PastExperience: React.FC = () => {
 
     return (
         <div className={"p-5 flex flex-col gap-2"}>
-            <Modal isOpen={addExperienceModalOpen} setIsOpen={setAddExperienceModalOpen} title={"Add New Experience"}>
-                Testing 1 2 3
+            <Modal
+                isOpen={addExperienceModalOpen}
+                onClose={() => setAddExperienceModalOpen(false)}
+                title={"Add New Experience"}
+            >
+                <AddExperience
+                    companyDescriptionId={companyDescriptionId ? parseInt(companyDescriptionId) : null}
+                    roleId={roleId ? parseInt(roleId) : null}
+                    onAfterSubmit={() => setAddExperienceModalOpen(false)}
+                />
             </Modal>
             <div>
                 Before doing interview, it's important to go over your past experience that's related to the skill
