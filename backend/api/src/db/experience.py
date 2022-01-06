@@ -16,3 +16,14 @@ class Experience(db.Model):
 
     user = db.relationship('User')
     skills = db.relationship('Skill', secondary='experience_skill')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'summary': self.summary,
+            'situation': self.situation,
+            'action': self.action,
+            'outcome': self.outcome,
+            'user_id': self.user_id,
+            'skills': [skill.to_dict() for skill in self.skills]
+        }

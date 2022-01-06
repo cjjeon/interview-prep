@@ -13,7 +13,7 @@ const GET_ADD_EXPERIENCE = gql`
             }
         }
 
-        roleSkills: skills(companyDescriptionId: $companyDescriptionId, roleId: $roleId) {
+        roleSkills: skills(companyDescriptionId: $companyDescriptionId, roleId: $roleId, limit: 20) {
             skills {
                 name
             }

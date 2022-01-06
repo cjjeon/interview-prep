@@ -29,7 +29,7 @@ const PastExperience: React.FC = () => {
     const [addExperienceModalOpen, setAddExperienceModalOpen] = useState<boolean>(false)
 
     const { companyDescriptionId, roleId } = useParams()
-    const { data } = useQuery<ExperienceData>(GET_EXPERIENCES, {
+    const { data, refetch } = useQuery<ExperienceData>(GET_EXPERIENCES, {
         variables: {
             companyDescriptionId: companyDescriptionId ? companyDescriptionId : null,
             roleId: roleId ? roleId : null,
@@ -46,7 +46,14 @@ const PastExperience: React.FC = () => {
                 <AddExperience
                     companyDescriptionId={companyDescriptionId ? parseInt(companyDescriptionId) : null}
                     roleId={roleId ? parseInt(roleId) : null}
-                    onAfterSubmit={() => setAddExperienceModalOpen(false)}
+                    onAfterSubmit={() => {
+                        refetch({
+                            companyDescriptionId: companyDescriptionId ? companyDescriptionId : null,
+                            roleId: roleId ? roleId : null,
+                        }).then(() => {
+                            setAddExperienceModalOpen(false)
+                        })
+                    }}
                 />
             </Modal>
             <div>

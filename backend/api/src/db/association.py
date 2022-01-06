@@ -25,5 +25,5 @@ class ExperienceSkill(db.Model):
 
     __table_args__ = (db.UniqueConstraint(experience_id, skill_id),)
 
-    experience = db.relationship('Experience', backref='experience_association')
-    skill = db.relationship('Skill', backref='skill_association')
+    experience = db.relationship('Experience')
+    skill = db.relationship('Skill')
