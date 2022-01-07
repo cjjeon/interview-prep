@@ -1,7 +1,6 @@
 import React, { useEffect } from "react"
 import { IoCloseOutline } from "react-icons/io5"
 import { CSSTransition } from "react-transition-group"
-import "./Modal.css"
 
 interface ModalProps {
     isOpen: boolean
@@ -51,7 +50,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, title, onClose, children }) => {
                                     <IoCloseOutline size={25} />
                                 </div>
                             </div>
-                            <div>{children}</div>
+                            {isOpen ? <div>{children}</div> : null}
                         </div>
                     </div>
                 </div>

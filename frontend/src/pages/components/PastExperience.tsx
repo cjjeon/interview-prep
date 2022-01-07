@@ -4,6 +4,7 @@ import { gql, useQuery } from "@apollo/client"
 import SimpleButton from "../../component/buttons/SimpleButton"
 import Modal from "../../component/modals/Modal"
 import AddExperience from "./AddExperience"
+import ViewEditExperience from "./ViewEditExperience"
 
 interface Experience {
     id: number
@@ -33,6 +34,8 @@ const GET_EXPERIENCES = gql`
 
 const PastExperience: React.FC = () => {
     const [addExperienceModalOpen, setAddExperienceModalOpen] = useState<boolean>(false)
+    const [viewExperienceModalOpen, setViewExperienceModalOpen] = useState<boolean>(false)
+    const [viewExperienceId, setViewExperienceId] = useState<number>(0)
 
     const { companyDescriptionId, roleId } = useParams()
     const { data, refetch } = useQuery<ExperienceData>(GET_EXPERIENCES, {
@@ -62,6 +65,15 @@ const PastExperience: React.FC = () => {
                     }}
                 />
             </Modal>
+
+            <Modal
+                isOpen={viewExperienceModalOpen}
+                onClose={() => setViewExperienceModalOpen(false)}
+                title={"View Experience"}
+            >
+                <ViewEditExperience experienceId={viewExperienceId} />
+            </Modal>
+
             <div>
                 Before doing interview, it's important to go over your past experience that's related to the skill
                 required for the job. Typically, the interviewer will ask question related to job requirements.
@@ -74,6 +86,10 @@ const PastExperience: React.FC = () => {
                                 <div
                                     key={experienceIndex}
                                     className={"border rounded hover:bg-yellow-200 cursor-pointer m-2"}
+                                    onClick={() => {
+                                        setViewExperienceId(experience.id)
+                                        setViewExperienceModalOpen(true)
+                                    }}
                                 >
                                     <div className={"text-blue-300 underline"}>{experience.summary}</div>
                                     <div className={"flex justify-center"}>
@@ -93,17 +109,18 @@ const PastExperience: React.FC = () => {
                         })}
                     </div>
                 ) : (
-                    <div className={"flex flex-col gap-2 rounded-lg border-4 border-dotted p-5"}>
+                    <div className={"flex flex-col gap-2 rounded-lg border-4 border-dotted p-5 m-2"}>
                         <div>No Past Experience has been Added</div>
-                        <div>
-                            <SimpleButton
-                                color={"yellow"}
-                                label={"Add New Experience"}
-                                onClick={() => setAddExperienceModalOpen(true)}
-                            />
-                        </div>
                     </div>
                 )}
+
+                <div>
+                    <SimpleButton
+                        color={"yellow"}
+                        label={"Add New Experience"}
+                        onClick={() => setAddExperienceModalOpen(true)}
+                    />
+                </div>
             </div>
         </div>
     )

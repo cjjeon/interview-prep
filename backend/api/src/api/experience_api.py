@@ -2,10 +2,22 @@ from typing import Optional, List
 
 from ariadne import convert_kwargs_to_snake_case
 
-from dao.experience_dao import create_experience, get_experiences
+from dao.experience_dao import create_experience, get_experiences, get_experience
 from dao.role_dao import create_or_get_skills
 from logger import function_time_logging
 from model.models import GraphQLResolveInfo
+
+
+@function_time_logging
+def query_experience(_, info: GraphQLResolveInfo, id: int):
+    user = info.context.user
+
+    experience = get_experience(id, user.user_id)
+
+    if experience is None:
+        return {}
+
+    return experience.to_dict()
 
 
 @function_time_logging

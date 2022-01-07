@@ -5,6 +5,10 @@ from db.association import ExperienceSkill, CompanyDescriptionRoleSkill
 from setup import db
 
 
+def get_experience(id: int, user_id: str) -> Optional[Experience]:
+    return Experience.query.filter(Experience.id == id).filter(Experience.user_id == user_id).first()
+
+
 def get_experiences(
         user_id: str, company_description_id: Optional[int] = None, role_id: Optional[int] = None
 ) -> List[Experience]:

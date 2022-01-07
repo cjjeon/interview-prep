@@ -85,6 +85,7 @@ type Query {
     companyDescriptions: CompanyDescriptionsResult!
     companyDescription(companyId: ID!): CompanyDescriptionResult!
     searchRoles(filterName: String): RolesResult
+    experience(id: ID!): Experience
     experiences(companyDescriptionId: ID, roleId: ID): ExperiencesResult!
     skills(filterName: String, companyDescriptionId: ID, roleId: ID, limit: Int): SkillsResult!
     user: UserResult!
