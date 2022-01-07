@@ -41,6 +41,7 @@ type Experience {
     situation: String
     action: String
     outcome: String
+    skills: [Skill]
 }
 
 type CompaniesResult {

@@ -8,10 +8,13 @@ import AddExperience from "./AddExperience"
 interface Experience {
     id: number
     summary: string
+    skills: { name: string }[]
 }
 
 interface ExperienceData {
-    experiences: Experience[]
+    experiences: {
+        experiences: Experience[]
+    }
 }
 
 const GET_EXPERIENCES = gql`
@@ -20,6 +23,9 @@ const GET_EXPERIENCES = gql`
             experiences {
                 id
                 summary
+                skills {
+                    name
+                }
             }
         }
     }
@@ -61,8 +67,31 @@ const PastExperience: React.FC = () => {
                 required for the job. Typically, the interviewer will ask question related to job requirements.
             </div>
             <div className={"w-full"}>
-                {data?.experiences && data.experiences.length > 0 ? (
-                    <div>Data Found</div>
+                {data?.experiences && data.experiences.experiences.length > 0 ? (
+                    <div>
+                        {data.experiences.experiences.map((experience, experienceIndex) => {
+                            return (
+                                <div
+                                    key={experienceIndex}
+                                    className={"border rounded hover:bg-yellow-200 cursor-pointer m-2"}
+                                >
+                                    <div className={"text-blue-300 underline"}>{experience.summary}</div>
+                                    <div className={"flex justify-center"}>
+                                        {experience.skills.map((skill, skillIndex) => {
+                                            return (
+                                                <div
+                                                    key={skillIndex}
+                                                    className={"bg-green-200 rounded-full p-1 m-1 text-xs font-medium"}
+                                                >
+                                                    {skill.name}
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
                 ) : (
                     <div className={"flex flex-col gap-2 rounded-lg border-4 border-dotted p-5"}>
                         <div>No Past Experience has been Added</div>

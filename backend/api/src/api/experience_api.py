@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from ariadne import convert_kwargs_to_snake_case
 
-from dao.experience_dao import create_experience
+from dao.experience_dao import create_experience, get_experiences
 from dao.role_dao import create_or_get_skills
 from logger import function_time_logging
 from model.models import GraphQLResolveInfo
@@ -14,8 +14,9 @@ def query_experiences(_, info: GraphQLResolveInfo, company_description_id: Optio
                       role_id: Optional[int] = None):
     user = info.context.user
 
+    experiences = get_experiences(user.user_id, company_description_id, role_id)
     return {
-        'experiences': []
+        'experiences': [experience.to_dict() for experience in experiences]
     }
 
 
