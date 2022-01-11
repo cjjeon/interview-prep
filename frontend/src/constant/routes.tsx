@@ -6,6 +6,7 @@ import CreateCompany from "../pages/CreateCompany"
 import CreateRole from "../pages/CreateRole"
 import Logout from "../pages/Logout"
 import Interview from "../pages/Interview"
+import MockInterview from "../pages/components/MockInterview"
 
 interface IRoute {
     path: string
@@ -50,10 +51,17 @@ export const INTERVIEW_PAGE: IRoute = {
     component: <Interview />,
 }
 
+// Role Page
+export const MOCK_INTERVIEW_PAGE: IRoute = {
+    path: "/company/:companyDescriptionId/position/:roleId/mock-interview",
+    component: <MockInterview />,
+}
+
 export const ROUTES: IRoute[] = [
     COMPANY_LIST_PAGE,
     COMPANY_CREATE_PAGE,
     CREATE_POSITION_PAGE,
+    MOCK_INTERVIEW_PAGE,
     INTERVIEW_PAGE,
     LOGIN_PAGE,
     LOGOUT_PAGE,

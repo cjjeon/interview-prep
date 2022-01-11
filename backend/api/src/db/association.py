@@ -27,3 +27,18 @@ class ExperienceSkill(db.Model):
 
     experience = db.relationship('Experience')
     skill = db.relationship('Skill')
+
+
+class InterviewQuestionUserHistory(db.Model):
+    __tablename__ = 'interview_question_user_history'
+
+    id = db.Column('id', db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column('user_id', db.String, db.ForeignKey('user.id'))
+    interview_question_id = db.Column('interview_question_id', db.Integer, db.ForeignKey('interview_question.id'))
+    company_description_id = db.Column('company_description_id', db.Integer, db.ForeignKey('company_description.id'))
+    role_id = db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
+
+    communication_score = db.Column('communication_score', db.Integer, nullable=True)
+    confidence_score = db.Column('confidence_score', db.Integer, nullable=True)
+    positivity_score = db.Column('positivity_score', db.Integer, nullable=True)
+    video_location = db.Column('video_location', db.String, nullable=False)

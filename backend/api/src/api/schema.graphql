@@ -13,6 +13,7 @@ type CompanyDescription {
     description: String!
     company: Company!
 }
+
 type User {
     email: String!
     firstName: String!
@@ -80,6 +81,12 @@ type ExperiencesResult {
     experiences: [Experience]
 }
 
+type InterviewQuestion {
+    id: ID!
+    question: String
+    tip: String
+}
+
 type Query {
     searchCompanies(filterName: String): CompaniesResult
     companyDescriptions: CompanyDescriptionsResult!
@@ -89,6 +96,7 @@ type Query {
     experiences(companyDescriptionId: ID, roleId: ID): ExperiencesResult!
     skills(filterName: String, companyDescriptionId: ID, roleId: ID, limit: Int): SkillsResult!
     user: UserResult!
+    interviewQuestion: InterviewQuestion
 }
 
 type Mutation {
