@@ -1,8 +1,10 @@
-import React from "react"
+import React, { useEffect } from "react"
 import Webcam from "react-webcam"
-import { gql, useQuery } from "@apollo/client"
+import { gql, useMutation, useQuery } from "@apollo/client"
 import Loading from "../../component/loading/Loading"
 import SimpleButton from "../../component/buttons/SimpleButton"
+import { useNavigate, useParams } from "react-router-dom"
+import { MOCK_INTERVIEW_VIEW_PAGE } from "../../constant/routes"
 
 const GET_INTERVIEW_QUESTION = gql`
     query getInterviewQuestion {
@@ -14,13 +16,24 @@ const GET_INTERVIEW_QUESTION = gql`
     }
 `
 
-interface GetInterviewQuestion {
+interface GetInterviewQuestionData {
     interviewQuestion: {
         id: string
         question: string
         tip: string
     }
 }
+
+const UPLOAD_FILE = gql`
+    mutation ($companyDescriptionId: ID!, $roleId: ID!, $interviewQuestionId: ID!, $file: Upload!) {
+        uploadMockInterview(
+            companyDescriptionId: $companyDescriptionId
+            roleId: $roleId
+            interviewQuestionId: $interviewQuestionId
+            file: $file
+        )
+    }
+`
 
 const MockInterview: React.FC = () => {
     const [start, setStart] = React.useState<boolean>(false)
@@ -32,7 +45,36 @@ const MockInterview: React.FC = () => {
     const webcamRef = React.useRef<Webcam>(null)
     const mediaRecorderRef = React.useRef<MediaRecorder | null>(null)
 
-    const { data, loading } = useQuery<GetInterviewQuestion>(GET_INTERVIEW_QUESTION)
+    const { data, loading } = useQuery<GetInterviewQuestionData>(GET_INTERVIEW_QUESTION)
+    const [uploadMockInterview] = useMutation(UPLOAD_FILE)
+    const { companyDescriptionId, roleId } = useParams()
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!start && recordedChunks.length) {
+            const interviewQuestionId = data?.interviewQuestion.id
+            const file = new File(recordedChunks, "abcd.webm", { type: "video/webm" })
+            uploadMockInterview({
+                variables: {
+                    companyDescriptionId,
+                    roleId,
+                    interviewQuestionId,
+                    file,
+                },
+            }).then(({ data }) => {
+                setRecordedChunks([])
+                if (companyDescriptionId && roleId) {
+                    navigate(
+                        MOCK_INTERVIEW_VIEW_PAGE.path
+                            .replace(":companyDescriptionId", companyDescriptionId)
+                            .replace(":roleId", roleId)
+                            .replace(":mockInterviewId", data.uploadMockInterview)
+                    )
+                }
+            })
+        }
+    }, [start, recordedChunks, uploadMockInterview])
 
     const handleDataAvailable = React.useCallback(
         ({ data }: BlobEvent) => {
@@ -49,7 +91,7 @@ const MockInterview: React.FC = () => {
             mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
                 mimeType: "video/webm",
             })
-            mediaRecorderRef.current.addEventListener("dataavailable", handleDataAvailable)
+            mediaRecorderRef.current.ondataavailable = handleDataAvailable
             mediaRecorderRef.current.start()
         }
     }, [webcamRef, setStart, mediaRecorderRef])
@@ -70,23 +112,7 @@ const MockInterview: React.FC = () => {
             mediaRecorderRef.current.stop()
             setStart(false)
         }
-    }, [mediaRecorderRef, webcamRef, setStart])
-
-    const handleDownload = React.useCallback(() => {
-        if (recordedChunks.length) {
-            const blob = new Blob(recordedChunks, {
-                type: "video/webm",
-            })
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement("a")
-            document.body.appendChild(a)
-            a.href = url
-            a.download = "react-webcam-stream-capture.webm"
-            a.click()
-            window.URL.revokeObjectURL(url)
-            setRecordedChunks([])
-        }
-    }, [recordedChunks])
+    }, [mediaRecorderRef, setStart, recordedChunks])
 
     React.useEffect(() => {
         navigator.mediaDevices.enumerateDevices().then((mediaDevices) => {

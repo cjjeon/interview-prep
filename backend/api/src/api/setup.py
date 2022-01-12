@@ -2,7 +2,8 @@ from ariadne import ObjectType, load_schema_from_path, make_executable_schema, s
 
 from api.company_api import query_company_descriptions, mutation_create_company_description, query_search_companies
 from api.experience_api import query_experiences, mutation_create_experience, query_experience
-from api.interview_question_api import query_interview_question
+from api.interview_question_api import query_interview_question, mutation_upload_mock_interview, query_mock_interview, \
+    mutation_update_mock_interview_score
 from api.position_api import mutation_create_role, query_get_roles, query_skills
 from api.user_api import resolve_user
 
@@ -15,11 +16,14 @@ query.set_field('skills', query_skills)
 query.set_field('experience', query_experience)
 query.set_field('experiences', query_experiences)
 query.set_field('interviewQuestion', query_interview_question)
+query.set_field('mockInterview', query_mock_interview)
 
 mutation = ObjectType("Mutation")
 mutation.set_field('createCompanyDescription', mutation_create_company_description)
 mutation.set_field('createRole', mutation_create_role)
 mutation.set_field('createExperience', mutation_create_experience)
+mutation.set_field('uploadMockInterview', mutation_upload_mock_interview)
+mutation.set_field('updateMockInterviewScore', mutation_update_mock_interview_score)
 
 type_defs = load_schema_from_path("./api/schema.graphql")
 schema = make_executable_schema(

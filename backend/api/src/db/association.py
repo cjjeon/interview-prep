@@ -38,7 +38,23 @@ class InterviewQuestionUserHistory(db.Model):
     company_description_id = db.Column('company_description_id', db.Integer, db.ForeignKey('company_description.id'))
     role_id = db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
 
-    communication_score = db.Column('communication_score', db.Integer, nullable=True)
-    confidence_score = db.Column('confidence_score', db.Integer, nullable=True)
-    positivity_score = db.Column('positivity_score', db.Integer, nullable=True)
+    communication_score = db.Column('communication_score', db.Integer, default=2)
+    confidence_score = db.Column('confidence_score', db.Integer, default=2)
+    positivity_score = db.Column('positivity_score', db.Integer, default=2)
     video_location = db.Column('video_location', db.String, nullable=False)
+
+    interview_question = db.relationship("InterviewQuestion")
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'interview_question_id': self.interview_question_id,
+            'company_description_id': self.company_description_id,
+            'role_id': self.role_id,
+            'communication_score': self.communication_score,
+            'confidence_score': self.confidence_score,
+            'positivity_score': self.positivity_score,
+            'video_url': self.video_location,
+            'question': self.interview_question.question
+        }

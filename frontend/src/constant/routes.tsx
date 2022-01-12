@@ -7,6 +7,7 @@ import CreateRole from "../pages/CreateRole"
 import Logout from "../pages/Logout"
 import Interview from "../pages/Interview"
 import MockInterview from "../pages/components/MockInterview"
+import ViewMockInterview from "../pages/components/ViewMockInterview"
 
 interface IRoute {
     path: string
@@ -39,28 +40,31 @@ export const COMPANY_CREATE_PAGE: IRoute = {
     component: <CreateCompany />,
 }
 
-// Role Page
 export const CREATE_POSITION_PAGE: IRoute = {
     path: "/company/:companyDescriptionId/position/create",
     component: <CreateRole />,
 }
 
-// Role Page
 export const INTERVIEW_PAGE: IRoute = {
     path: "/company/:companyDescriptionId/position/:roleId",
     component: <Interview />,
 }
 
-// Role Page
 export const MOCK_INTERVIEW_PAGE: IRoute = {
     path: "/company/:companyDescriptionId/position/:roleId/mock-interview",
     component: <MockInterview />,
+}
+
+export const MOCK_INTERVIEW_VIEW_PAGE: IRoute = {
+    path: "/company/:companyDescriptionId/position/:roleId/mock-interview/:mockInterviewId",
+    component: <ViewMockInterview />,
 }
 
 export const ROUTES: IRoute[] = [
     COMPANY_LIST_PAGE,
     COMPANY_CREATE_PAGE,
     CREATE_POSITION_PAGE,
+    MOCK_INTERVIEW_VIEW_PAGE,
     MOCK_INTERVIEW_PAGE,
     INTERVIEW_PAGE,
     LOGIN_PAGE,

@@ -1,15 +1,16 @@
 import { useAuth0 } from "@auth0/auth0-react"
 import React from "react"
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from "@apollo/client"
+import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache } from "@apollo/client"
 import { API_URL } from "../constant/configs"
 import { setContext } from "@apollo/client/link/context"
+import { createUploadLink } from "apollo-upload-client"
 
 const AuthApolloProvider: React.FC = ({ children }) => {
     const { getAccessTokenSilently } = useAuth0()
 
-    const httpLink = createHttpLink({
+    const uploadLink = createUploadLink({
         uri: `${API_URL}/graphql`,
-    })
+    }) as unknown as ApolloLink
 
     const authLink = setContext((_, { headers }) => {
         return getAccessTokenSilently()
@@ -28,7 +29,7 @@ const AuthApolloProvider: React.FC = ({ children }) => {
 
     const apolloClient = new ApolloClient({
         cache: new InMemoryCache(),
-        link: authLink.concat(httpLink),
+        link: authLink.concat(uploadLink),
     })
     return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
 }

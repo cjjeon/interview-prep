@@ -1,12 +1,14 @@
 import json
 import logging
+import os
+import re
 from functools import wraps
 from urllib.request import urlopen
 
 import requests
-from ariadne import graphql_sync
+from ariadne import graphql_sync, combine_multipart_data
 from ariadne.constants import PLAYGROUND_HTML
-from flask import request, jsonify, _request_ctx_stack
+from flask import request, jsonify, _request_ctx_stack, Response
 from jose import jwt
 from werkzeug.exceptions import HTTPException
 
@@ -143,6 +145,12 @@ def graphql_playground():
 @function_time_logging
 def graphql_server():
     data = request.get_json()
+    if request.content_type.startswith("multipart/form-data"):
+        data = combine_multipart_data(
+            json.loads(request.form.get("operations")),
+            json.loads(request.form.get("map")),
+            dict(request.files)
+        )
     success, result = graphql_sync(
         schema,
         data,
@@ -155,7 +163,46 @@ def graphql_server():
     return jsonify(result), status_code
 
 
+def get_chunk(video_name: str, byte1=None, byte2=None):
+    full_path = f"./videos/{video_name}"
+    file_size = os.stat(full_path).st_size
+    start = 0
+
+    if byte1 < file_size:
+        start = byte1
+    if byte2:
+        length = byte2 + 1 - byte1
+    else:
+        length = file_size - start
+
+    with open(full_path, 'rb') as f:
+        f.seek(start)
+        chunk = f.read(length)
+    return chunk, start, length, file_size
+
+
+@app.route('/video/<name>', methods=['GET'])
+def get_video_file(name: str):
+    range_header = request.headers.get('Range', None)
+    byte1, byte2 = 0, None
+    if range_header:
+        match = re.search(r'(\d+)-(\d*)', range_header)
+        groups = match.groups()
+
+        if groups[0]:
+            byte1 = int(groups[0])
+        if groups[1]:
+            byte2 = int(groups[1])
+
+    chunk, start, length, file_size = get_chunk(name, byte1, byte2)
+    resp = Response(chunk, 206, mimetype='video/mp4',
+                    content_type='video/mp4', direct_passthrough=True)
+    resp.headers.add('Content-Range', 'bytes {0}-{1}/{2}'.format(start, start + length - 1, file_size))
+    resp.headers.add('Accept-Ranges', 'bytes')
+    return resp
+
+
 if __name__ == "__main__":
     setup_logging()
     logger.info("Flask Server has been started!!")
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, threaded=True)
