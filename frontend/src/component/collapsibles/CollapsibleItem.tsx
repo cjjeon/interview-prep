@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import Collapse from "../transition/Collapse"
-import { FaChevronRight } from "react-icons/all"
+import { FaChevronRight } from "react-icons/fa"
 
 interface CollapsibleItemProps {
     title: string

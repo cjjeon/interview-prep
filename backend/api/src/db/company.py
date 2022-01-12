@@ -35,4 +35,5 @@ class CompanyDescription(db.Model):
             'id': self.id,
             'description': self.description,
             'company': self.company.to_dict(),
+            'roles': [role.to_dict() for role in self.roles]
         }

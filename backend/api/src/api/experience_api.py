@@ -27,9 +27,7 @@ def query_experiences(_, info: GraphQLResolveInfo, company_description_id: Optio
     user = info.context.user
 
     experiences = get_experiences(user.user_id, company_description_id, role_id)
-    return {
-        'experiences': [experience.to_dict() for experience in experiences]
-    }
+    return [experience.to_dict() for experience in experiences]
 
 
 @function_time_logging

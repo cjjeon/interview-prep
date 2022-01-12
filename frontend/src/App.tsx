@@ -1,30 +1,18 @@
-import React, { useRef } from "react"
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"
+import React from "react"
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
-import { CSSTransition } from "react-transition-group"
 
-import { ROUTES } from "./constant/routes"
+import { MAIN_PAGE, ROUTES } from "./constant/routes"
 
-import "./App.css"
 import "react-toastify/dist/ReactToastify.css"
-
-const AnimatedSwitch = () => {
-    const location = useLocation()
-    const nodeRef = useRef<HTMLDivElement>(null)
-    return (
-        <CSSTransition nodeRef={nodeRef} key={location.key} classNames="fade" timeout={500}>
-            <div ref={nodeRef}>
-                <Routes>
-                    {ROUTES.map((route, index) => {
-                        return <Route key={index} path={route.path} element={route.component} />
-                    })}
-                </Routes>
-            </div>
-        </CSSTransition>
-    )
-}
+import Example from "./pages/Test"
+import { useAuth0 } from "@auth0/auth0-react"
+import Loading from "./component/loading/Loading"
 
 function App() {
+    const { isAuthenticated, isLoading } = useAuth0()
+    if (isLoading) return <Loading />
+
     return (
         <div
             className={
@@ -42,10 +30,26 @@ function App() {
                 draggable
                 pauseOnHover
             />
-
             <BrowserRouter>
                 <div className={"max-w-screen-lg"}>
-                    <AnimatedSwitch />
+                    <Routes>
+                        {ROUTES.map((route, index) => {
+                            return (
+                                <Route
+                                    key={index}
+                                    path={route.path}
+                                    element={
+                                        route.isPrivate && !isAuthenticated ? (
+                                            <Navigate to={MAIN_PAGE.path} />
+                                        ) : (
+                                            route.component
+                                        )
+                                    }
+                                />
+                            )
+                        })}
+                        <Route path={"/test"} element={<Example />} />
+                    </Routes>
                 </div>
             </BrowserRouter>
         </div>
