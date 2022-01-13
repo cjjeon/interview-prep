@@ -73,22 +73,21 @@ const CreateCompany: React.FC = () => {
     }
 
     return (
-        <div className={"flex flex-col justify-center h-screen w-full p-20 gap-10"}>
-            <div>
-                <h1 className={"text-3xl mb-5"}>Know The Company</h1>
-                <div>
+        <div className={"bg-white shadow overflow-hidden sm:rounded-lg max-w-3xl"}>
+            <div className="px-4 py-5 sm:px-6">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">Know The Company</h3>
+                <p className="mt-1 text-sm text-gray-500">
                     When you are doing interview, it's important to understand what company you are applying for. So,
                     take your time, look at their website, search their online presents, what they value.
-                </div>
+                </p>
             </div>
-            <div className={"flex flex-col gap-5"}>
+            <div className={"flex flex-col gap-5 px-4 sm:px-6 mb-3"}>
                 <FadeInOut
                     components={[
                         <div>
-                            <div>What's the name of the company?</div>
                             <InputTextWithOptions
                                 name={"company-name"}
-                                label={"Enter name of the company"}
+                                label={"What's the name of the company?"}
                                 value={name}
                                 type={"text"}
                                 onChange={(value) => setName(value)}
@@ -99,24 +98,28 @@ const CreateCompany: React.FC = () => {
                                         ? data.searchCompanies.companies.map((company: any) => company.name)
                                         : []
                                 }
+                                placeholder={"Example: Facebook or Google"}
                                 background={"transparent"}
                             />
                         </div>,
-                        <div className={"flex flex-col gap-2"}>
-                            <div>
-                                Most interviewers are interested to know if the candidates are interested in the
-                                company. So, they will ask questions such as "Can you tell us about our company?".
-                            </div>
-                            <div>
-                                In your own word, describe about the company. It doesn't have to be long but it's
-                                important for you write it out own your own word because it will help you remember.
+                        <div>
+                            <div className={"flex flex-col gap-2 block text-sm font-medium text-gray-700 mb-3"}>
+                                <div>
+                                    Most interviewers are interested to know if the candidates are interested in the
+                                    company. So, they will ask questions such as "Can you tell us about our company?".
+                                </div>
+                                <div>
+                                    In your own word, describe about the company. It doesn't have to be long but it's
+                                    important for you write it out own your own word because it will help you remember.
+                                </div>
                             </div>
                             <InputTextArea
                                 name={"company-description"}
-                                label={"In 50 ~ 100 words, can you tell me about the company?"}
+                                placeholder={
+                                    "Example: I read on your website that you’re one of the top data security companies in the US, and that you serve more than 40 Fortune 500 companies including some of the biggest tech companies like Microsoft and IBM. I also read a recent news article that mentioned you’re looking to expand into providing these services for financial institutions as well. Is that right? And can you tell me more about that?"
+                                }
                                 value={description}
                                 onChange={(value) => setDescription(value)}
-                                background={"transparent"}
                             />
                         </div>,
                     ]}

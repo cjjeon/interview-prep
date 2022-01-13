@@ -133,9 +133,9 @@ const MockInterview: React.FC = () => {
             </div>
             <div>
                 {start ? (
-                    <SimpleButton label={"Done Interview"} onClick={handleStop} color={"yellow"} />
+                    <SimpleButton label={"Done Interview"} onClick={handleStop} />
                 ) : (
-                    <SimpleButton label={"Begin Interview"} onClick={handleStart} color={"yellow"} />
+                    <SimpleButton label={"Begin Interview"} onClick={handleStart} />
                 )}
             </div>
         </div>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import "./InputText.css"
 
 interface InputTextWithOptionsProps {
     name: string
@@ -8,6 +7,7 @@ interface InputTextWithOptionsProps {
     type: "text" | "password"
     onChange: (value: string) => void
     options: string[]
+    placeholder?: string
     background?: "white" | "transparent"
 }
 
@@ -18,6 +18,7 @@ const InputTextWithOptions: React.FC<InputTextWithOptionsProps> = ({
     type,
     onChange,
     options,
+    placeholder = "",
     background = "white",
 }) => {
     const [focus, setFocus] = useState<number>(0)
@@ -25,9 +26,6 @@ const InputTextWithOptions: React.FC<InputTextWithOptionsProps> = ({
     useEffect(() => {
         setFocus(0)
     }, [value])
-
-    let backgroundCSS = "bg-white"
-    if (background === "transparent") backgroundCSS = "bg-transparent"
 
     const displayOptions = (): boolean => {
         if (options.length > 0) {
@@ -57,33 +55,29 @@ const InputTextWithOptions: React.FC<InputTextWithOptionsProps> = ({
     }
 
     return (
-        <div className={"mb-4 relative"}>
-            <input
-                className={`__input_text_input ${
-                    value !== "" ? "filled" : ""
-                } border border-gray-400 appearance-none rounded w-full px-3 py-3 pt-5 pb-2 focus focus:border-indigo-600 focus:outline-none active:outline-none active:border-indigo-600 ${backgroundCSS}`}
-                type={type}
-                value={value}
-                id={name}
-                onKeyDown={setFocusChange}
-                onChange={(event) => onChange(event.target.value)}
-                autoComplete={"off"}
-            />
-            <label
-                className={
-                    "__input_text_label absolute mb-0 -mt-2 pt-4 pl-3 leading-tighter text-gray-400 text-base mt-2 cursor-text"
-                }
-                htmlFor={name}
-            >
+        <div className={"relative"}>
+            <label className={"block text-sm font-medium text-gray-700"} htmlFor={name}>
                 {label}
             </label>
+            <div className={"mt-1"}>
+                <input
+                    className={`shadow-sm border focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2`}
+                    type={type}
+                    value={value}
+                    id={name}
+                    onKeyDown={setFocusChange}
+                    onChange={(event) => onChange(event.target.value)}
+                    autoComplete={"off"}
+                    placeholder={placeholder}
+                />
+            </div>
             {displayOptions() ? (
-                <div className="absolute mt-3 w-full rounded bg-white">
+                <div className="mt-2 border-2 rounded bg-white sm:text-sm divide-y divide-gray-200 fixed">
                     {options.map((option, index) => {
                         return (
                             <div
                                 key={index}
-                                className={`border border-gray-400 p-2 ${index === focus ? "bg-blue-100" : ""}`}
+                                className={`p-2 ${index === focus ? "bg-blue-100" : ""}`}
                                 onClick={() => onChange(option)}
                             >
                                 {option}

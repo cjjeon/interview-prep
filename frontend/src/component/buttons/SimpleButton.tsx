@@ -3,30 +3,15 @@ import React from "react"
 interface SimpleButtonProps {
     label: string
     onClick: () => void
-    color?: "red" | "blue" | "indigo" | "yellow" | "transparent"
-    borderColor?: "none" | "gray"
     icon?: React.ReactElement
 }
 
-const SimpleButton: React.FC<SimpleButtonProps> = ({ label, onClick, color, borderColor = "none", icon }) => {
-    let bgColorCss = "bg-blue-300"
-    if (color === "red") {
-        bgColorCss = "bg-red-300"
-    } else if (color === "indigo") {
-        bgColorCss = "bg-indigo-300"
-    } else if (color === "yellow") {
-        bgColorCss = "bg-yellow-300"
-    } else if (color === "transparent") {
-        bgColorCss = "bg-transparent"
-    }
-
-    let borderCss = ""
-    if (borderColor === "gray") {
-        borderCss = "border-2 border-gray-400"
-    }
-
+const SimpleButton: React.FC<SimpleButtonProps> = ({ label, onClick, icon }) => {
     return (
-        <button className={`w-full h-10 rounded ${bgColorCss} ${borderCss}`} onClick={onClick}>
+        <button
+            className={`bg-amber-200 rounded p-2 cursor-pointer flex gap-2 hover:bg-amber-300 justify-center items-center text-xs md:text-sm`}
+            onClick={onClick}
+        >
             <div className={"flex gap-3 justify-center items-center"}>
                 {icon}
                 {label}

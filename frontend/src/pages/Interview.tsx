@@ -30,7 +30,6 @@ const Interview: React.FC = () => {
                                 </div>
                                 <div>
                                     <SimpleButton
-                                        color={"yellow"}
                                         label={"Start Mock Interview!"}
                                         onClick={() =>
                                             navigate(

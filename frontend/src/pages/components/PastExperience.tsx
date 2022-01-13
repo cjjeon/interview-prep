@@ -115,11 +115,7 @@ const PastExperience: React.FC = () => {
                 )}
 
                 <div>
-                    <SimpleButton
-                        color={"yellow"}
-                        label={"Add New Experience"}
-                        onClick={() => setAddExperienceModalOpen(true)}
-                    />
+                    <SimpleButton label={"Add New Experience"} onClick={() => setAddExperienceModalOpen(true)} />
                 </div>
             </div>
         </div>

@@ -25,29 +25,14 @@ const FadeInOut: React.FC<FadeInOutProps> = ({ components, completeOnClick }) =>
             >
                 <div ref={nodeRef}>
                     <div>{components[page]}</div>
-                    <div className={"flex justify-end items-end gap-2"}>
+                    <div className={"flex justify-end items-end gap-2 mt-2"}>
                         {page !== 0 ? (
-                            <div className={"w-24"}>
-                                <SimpleButton
-                                    color={"transparent"}
-                                    borderColor={"gray"}
-                                    onClick={() => setPages((prevState) => prevState - 1)}
-                                    label={"Previous"}
-                                />
-                            </div>
+                            <SimpleButton onClick={() => setPages((prevState) => prevState - 1)} label={"Previous"} />
                         ) : null}
                         {page < components.length - 1 ? (
-                            <div className={"w-24"}>
-                                <SimpleButton
-                                    color={"yellow"}
-                                    onClick={() => setPages((prevState) => prevState + 1)}
-                                    label={"Next"}
-                                />
-                            </div>
+                            <SimpleButton onClick={() => setPages((prevState) => prevState + 1)} label={"Next"} />
                         ) : (
-                            <div className={"w-24"}>
-                                <SimpleButton color={"yellow"} onClick={() => completeOnClick()} label={"Complete"} />
-                            </div>
+                            <SimpleButton onClick={() => completeOnClick()} label={"Complete"} />
                         )}
                     </div>
                 </div>
