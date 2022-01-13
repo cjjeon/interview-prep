@@ -5,10 +5,10 @@ import CreateCompany from "../pages/CreateCompany"
 import CreateRole from "../pages/CreateRole"
 import Logout from "../pages/Logout"
 import Interview from "../pages/Interview"
-import MockInterview from "../pages/components/MockInterview"
-import ViewMockInterview from "../pages/components/ViewMockInterview"
+import MockInterview from "../pages/MockInterview"
+import ViewMockInterview from "../pages/ViewMockInterview"
 import Dashboard from "../pages/Dashboard"
-import AddExperience from "../pages/components/AddExperience"
+import AddExperience from "../pages/AddExperience"
 
 interface IRoute {
     path: string

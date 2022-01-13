@@ -1,6 +1,6 @@
 import React from "react"
 import { gql, useQuery } from "@apollo/client"
-import Loading from "../../component/loading/Loading"
+import Loading from "../component/loading/Loading"
 
 const GET_EXPERIENCE = gql`
     query GetExperience($id: ID!) {

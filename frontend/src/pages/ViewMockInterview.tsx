@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { gql, useMutation, useQuery } from "@apollo/client"
 import { useParams } from "react-router-dom"
-import Loading from "../../component/loading/Loading"
+import Loading from "../component/loading/Loading"
 import ReactPlayer from "react-player"
-import { API_URL } from "../../constant/configs"
+import { API_URL } from "../constant/configs"
 import { FaRegDizzy, FaRegFrown, FaRegLaughBeam, FaRegMeh, FaRegSmile } from "react-icons/fa"
 
 const GET_MOCK_INTERVIEW_QUESTION = gql`

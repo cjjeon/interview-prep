@@ -1,10 +1,10 @@
 import React, { useEffect } from "react"
 import Webcam from "react-webcam"
 import { gql, useMutation, useQuery } from "@apollo/client"
-import Loading from "../../component/loading/Loading"
-import SimpleButton from "../../component/buttons/SimpleButton"
+import Loading from "../component/loading/Loading"
+import SimpleButton from "../component/buttons/SimpleButton"
 import { useNavigate, useParams } from "react-router-dom"
-import { MOCK_INTERVIEW_VIEW_PAGE } from "../../constant/routes"
+import { MOCK_INTERVIEW_VIEW_PAGE } from "../constant/routes"
 
 const GET_INTERVIEW_QUESTION = gql`
     query getInterviewQuestion {

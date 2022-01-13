@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { gql, useMutation, useQuery } from "@apollo/client"
-import InputTextWithOptions from "../../component/inputs/InputTextWithOptions"
-import InputText from "../../component/inputs/InputText"
+import InputTextWithOptions from "../component/inputs/InputTextWithOptions"
+import InputText from "../component/inputs/InputText"
 import { FaWindowClose } from "react-icons/fa"
 import { toast } from "react-toastify"
 

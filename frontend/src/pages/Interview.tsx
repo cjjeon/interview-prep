@@ -1,7 +1,7 @@
 import React from "react"
 import SimpleButton from "../component/buttons/SimpleButton"
 import Collapsible from "../component/collapsibles/CollapsibleItem"
-import PastExperience from "./components/PastExperience"
+import PastExperience from "./PastExperience"
 import { useNavigate, useParams } from "react-router-dom"
 import { DASHBOARD_PAGE, MOCK_INTERVIEW_PAGE } from "../constant/routes"
 

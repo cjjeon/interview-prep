@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
-import SimpleButton from "../../component/buttons/SimpleButton"
-import Modal from "../../component/modals/Modal"
+import SimpleButton from "../component/buttons/SimpleButton"
+import Modal from "../component/modals/Modal"
 import AddExperience from "./AddExperience"
 import ViewEditExperience from "./ViewEditExperience"
 
