@@ -5,7 +5,6 @@ import { ToastContainer } from "react-toastify"
 import { MAIN_PAGE, ROUTES } from "./constant/routes"
 
 import "react-toastify/dist/ReactToastify.css"
-import Example from "./pages/Test"
 import { useAuth0 } from "@auth0/auth0-react"
 import Loading from "./component/loading/Loading"
 
@@ -48,7 +47,6 @@ function App() {
                                 />
                             )
                         })}
-                        <Route path={"/test"} element={<Example />} />
                     </Routes>
                 </div>
             </BrowserRouter>
