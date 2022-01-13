@@ -3,7 +3,7 @@ import SimpleButton from "../component/buttons/SimpleButton"
 import Collapsible from "../component/collapsibles/CollapsibleItem"
 import PastExperience from "./components/PastExperience"
 import { useNavigate, useParams } from "react-router-dom"
-import { COMPANY_LIST_PAGE, MOCK_INTERVIEW_PAGE } from "../constant/routes"
+import { DASHBOARD_PAGE, MOCK_INTERVIEW_PAGE } from "../constant/routes"
 
 const Interview: React.FC = () => {
     const navigate = useNavigate()
@@ -11,7 +11,7 @@ const Interview: React.FC = () => {
     const { companyDescriptionId, roleId } = useParams()
 
     if (!companyDescriptionId || !roleId) {
-        navigate(COMPANY_LIST_PAGE.path)
+        navigate(DASHBOARD_PAGE.path)
         return null
     }
 

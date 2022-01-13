@@ -1,6 +1,6 @@
 import React from "react"
 import { useNavigate } from "react-router-dom"
-import { COMPANY_LIST_PAGE, LOGIN_PAGE } from "../constant/routes"
+import { DASHBOARD_PAGE, LOGIN_PAGE } from "../constant/routes"
 import { useAuth0 } from "@auth0/auth0-react"
 import Loading from "../component/loading/Loading"
 
@@ -12,7 +12,7 @@ const MainPage: React.FC = () => {
         if (!isAuthenticated) {
             navigate(LOGIN_PAGE.path)
         } else {
-            navigate(COMPANY_LIST_PAGE.path)
+            navigate(DASHBOARD_PAGE.path)
         }
     }
 
