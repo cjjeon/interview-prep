@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
-import SimpleButton from "../component/buttons/SimpleButton"
 import Modal from "../component/modals/Modal"
 import AddExperience from "./AddExperience"
 import ViewEditExperience from "./ViewEditExperience"
+import { PlusCircleIcon } from "@heroicons/react/solid"
 
 interface Experience {
     id: number
@@ -46,7 +46,7 @@ const PastExperience: React.FC = () => {
     })
 
     return (
-        <div className={"p-5 flex flex-col gap-2"}>
+        <div className={"flex flex-col gap-2"}>
             <Modal
                 isOpen={addExperienceModalOpen}
                 onClose={() => setAddExperienceModalOpen(false)}
@@ -73,19 +73,30 @@ const PastExperience: React.FC = () => {
             >
                 <ViewEditExperience experienceId={viewExperienceId} />
             </Modal>
-
-            <div>
-                Before doing interview, it's important to go over your past experience that's related to the skill
-                required for the job. Typically, the interviewer will ask question related to job requirements.
+            <div className={"flex justify-between items-center mb-2"}>
+                <div>
+                    <h2 className={"leading-6 font-medium text-gray-900"}>Past Experiences</h2>
+                </div>
+                <div className={"flex justify-center"}>
+                    <button
+                        className={
+                            "bg-amber-200 rounded p-2 cursor-pointer flex gap-2 hover:bg-amber-300 justify-center items-center"
+                        }
+                        onClick={() => setAddExperienceModalOpen(true)}
+                    >
+                        <PlusCircleIcon className={"h-5 w-5"} />
+                        <div className={"text-xs md:text-sm"}>New Experience</div>
+                    </button>
+                </div>
             </div>
-            <div className={"w-full"}>
+            <div className={"w-full m-2"}>
                 {data?.experiences && data.experiences.experiences.length > 0 ? (
                     <div>
                         {data.experiences.experiences.map((experience, experienceIndex) => {
                             return (
                                 <div
                                     key={experienceIndex}
-                                    className={"border rounded hover:bg-yellow-200 cursor-pointer m-2"}
+                                    className={"border rounded hover:bg-yellow-200 cursor-pointer"}
                                     onClick={() => {
                                         setViewExperienceId(experience.id)
                                         setViewExperienceModalOpen(true)
@@ -109,14 +120,12 @@ const PastExperience: React.FC = () => {
                         })}
                     </div>
                 ) : (
-                    <div className={"flex flex-col gap-2 rounded-lg border-4 border-dotted p-5 m-2"}>
-                        <div>No Past Experience has been Added</div>
+                    <div className={"flex flex-col justify-center items-center text-center"}>
+                        <div className={"mt-2 block text-sm font-medium text-gray-900"}>
+                            No Past Experience has been Added
+                        </div>
                     </div>
                 )}
-
-                <div>
-                    <SimpleButton label={"Add New Experience"} onClick={() => setAddExperienceModalOpen(true)} />
-                </div>
             </div>
         </div>
     )

@@ -1,6 +1,7 @@
 from ariadne import ObjectType, load_schema_from_path, make_executable_schema, snake_case_fallback_resolvers
 
-from api.company_api import query_company_descriptions, mutation_create_company_description, query_search_companies
+from api.company_api import query_company_descriptions, mutation_create_company_description, query_search_companies, \
+    query_company_description
 from api.experience_api import query_experiences, mutation_create_experience, query_experience
 from api.interview_question_api import query_interview_question, mutation_upload_mock_interview, query_mock_interview, \
     mutation_update_mock_interview_score
@@ -10,6 +11,7 @@ from api.user_api import resolve_user
 query = ObjectType("Query")
 query.set_field('searchCompanies', query_search_companies)
 query.set_field('companyDescriptions', query_company_descriptions)
+query.set_field('companyDescription', query_company_description)
 query.set_field('searchRoles', query_get_roles)
 query.set_field('user', resolve_user)
 query.set_field('skills', query_skills)

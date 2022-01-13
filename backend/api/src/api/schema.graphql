@@ -101,7 +101,7 @@ type MockInterview {
 type Query {
     searchCompanies(filterName: String): CompaniesResult
     companyDescriptions: [CompanyDescription]!
-    companyDescription(companyId: ID!): CompanyDescriptionResult!
+    companyDescription(companyDescriptionId: ID! roleId: ID!): CompanyDescription!
     searchRoles(filterName: String): RolesResult
     experience(id: ID!): Experience
     experiences(companyDescriptionId: ID, roleId: ID): [Experience]!

@@ -4,7 +4,7 @@ import MainPage from "../pages/MainPage"
 import CreateCompany from "../pages/CreateCompany"
 import CreateRole from "../pages/CreateRole"
 import Logout from "../pages/Logout"
-import Interview from "../pages/Interview"
+import InterviewPrep from "../pages/InterviewPrep"
 import MockInterview from "../pages/MockInterview"
 import ViewMockInterview from "../pages/ViewMockInterview"
 import Dashboard from "../pages/Dashboard"
@@ -58,7 +58,7 @@ export const CREATE_EXPERIENCE_PAGE: IRoute = {
 export const INTERVIEW_PAGE: IRoute = {
     path: "/company/:companyDescriptionId/position/:roleId",
     isPrivate: true,
-    component: <Interview />,
+    component: <InterviewPrep />,
 }
 
 export const MOCK_INTERVIEW_PAGE: IRoute = {

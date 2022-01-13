@@ -131,15 +131,6 @@ const CreateRole: React.FC = () => {
                                     show that you have the experience and skills to do the job. And, these points are
                                     often listed in the job description post.
                                 </div>
-                                <div>
-                                    Can you try list out all the requirements, skills, and responsibilities of the job?
-                                    This will help the tool to find out what questions might help you on the interview.
-                                </div>
-                                <div>
-                                    For Example, as software developer, add skills for Python, Golang, Architecture,
-                                    Microservices, Scalability, etc. Or, for the soft skills, add something like
-                                    Leadership, Management, etc.
-                                </div>
                             </div>
                             <div
                                 className={
