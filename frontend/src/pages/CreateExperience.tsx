@@ -4,6 +4,8 @@ import InputTextWithOptions from "../component/inputs/InputTextWithOptions"
 import InputText from "../component/inputs/InputText"
 import { FaWindowClose } from "react-icons/fa"
 import { toast } from "react-toastify"
+import InputTextArea from "../component/inputs/InputTextArea"
+import SimpleButton from "../component/buttons/SimpleButton"
 
 const GET_ADD_EXPERIENCE = gql`
     query AddExperience($skillFilterName: String, $companyDescriptionId: ID, $roleId: ID) {
@@ -56,13 +58,13 @@ const CREATE_EXPERIENCE = gql`
     }
 `
 
-interface AddExperienceProps {
+interface CreateExperienceProps {
     companyDescriptionId: number | null
     roleId: number | null
     onAfterSubmit?: () => void
 }
 
-const AddExperience: React.FC<AddExperienceProps> = ({ companyDescriptionId, roleId, onAfterSubmit }) => {
+const CreateExperience: React.FC<CreateExperienceProps> = ({ companyDescriptionId, roleId, onAfterSubmit }) => {
     const [skill, setSkill] = useState<string>("")
     const [skills, setSkills] = useState<string[]>([])
     const [recommendSkills, setRecommendSkills] = useState<string[]>([])
@@ -153,52 +155,60 @@ const AddExperience: React.FC<AddExperienceProps> = ({ companyDescriptionId, rol
     return (
         <div className={"flex flex-col gap-2 p-5"}>
             <div>
-                <div>What's the experience / project about?</div>
                 <InputText
                     name={"summary"}
-                    label={"Write summary of the experience / project"}
+                    label={"What's the experience / project about? (Situation)"}
                     value={summary}
                     type={"text"}
                     onChange={(value) => setSummary(value)}
                 />
             </div>
             <div>
-                <div>Can you describe the situation in details? What is it about?</div>
-                <InputText
+                <InputTextArea
                     name={"situation"}
-                    label={"Explain the situation"}
+                    placeholder={
+                        "Example: The project had a critical launch dates that had been set with a lot of sales and marketing investment riding on the product being ready. However the project was behind schedule, when our team leader unfortunately became ill, and had to leave."
+                    }
                     value={situation}
-                    type={"text"}
                     onChange={(value) => setSituation(value)}
+                    label={"Can you describe the situation in details? What is it about? (Task)"}
                 />
             </div>
             <div>
-                <div>What did you do?</div>
-                <InputText
+                <InputTextArea
                     name={"action"}
-                    label={"Write the action(s) that you took"}
+                    placeholder={
+                        "Example: I had been sports team captain at school, where I loved the challenge and responsibility of leadership. So I volunteered to stand in, and by using my technical analysis skills, spotted a few small mistakes made in the initial coding, that were causing the sporadic errors, and slowing us down. I then negotiated with our product director a small bonus incentive for the team, and budget for two pizza evenings, so we could pull a couple of late night shifts to correct the coding and catch up with the critical project landmarks."
+                    }
                     value={action}
-                    type={"text"}
+                    label={"What did you do? (Action)"}
                     onChange={(value) => setAction(value)}
                 />
             </div>
             <div>
-                <div>What was the outcome?</div>
-                <InputText
+                <InputTextArea
                     name={"outcome"}
-                    label={"Write the result"}
+                    placeholder={
+                        "Example: Though this took us 1.5% over budget the software was delivered on time with a better than target fault tolerance. The project was seen as a great success as the additional project cost was minimal compared to the costs of delaying the launch, and the negative affect on our product branding. The team where delighted with the extra bonus and I have now been officially promoted to team leader as a result"
+                    }
                     value={outcome}
-                    type={"text"}
+                    label={"What was the outcome? (Result)"}
                     onChange={(value) => setOutcome(value)}
                 />
             </div>
             <div className={"flex flex-col gap-3"}>
-                <h1>What Skills And Responsibilities required for the experience / project?</h1>
+                <p className={"block text-sm font-medium text-gray-700"}>
+                    What Skills And Responsibilities required for the experience / project?
+                </p>
                 <div>
-                    <div className={"border-dotted rounded-lg border-4 border-gray-400 p-3"}>
+                    <div
+                        className={
+                            "border-2 border-gray-300 border-dashed rounded-lg p-6 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        }
+                    >
                         {skills.length === 0 ? (
                             <div className={"text-center font-bold italic text-sm my-2"}>
-                                No Skills and Responsibilities Added
+                                No Skills or Responsibilities have been added
                             </div>
                         ) : (
                             <div className={"flex justify-center flex-wrap gap-2 relative"}>
@@ -207,7 +217,7 @@ const AddExperience: React.FC<AddExperienceProps> = ({ companyDescriptionId, rol
                                         <div
                                             key={index}
                                             className={
-                                                "flex items-center gap-2 border-2 rounded-full bg-blue-100 px-3 text-sm"
+                                                "flex items-center gap-2 border-2 text-xs bg-indigo-200 rounded-full px-2"
                                             }
                                         >
                                             <div>{s}</div>
@@ -226,15 +236,15 @@ const AddExperience: React.FC<AddExperienceProps> = ({ companyDescriptionId, rol
                     <div className={"my-4"}>
                         {recommendSkills.length > 0 ? (
                             <div>
-                                <div className={"text-sm font-light text-center my-2"}>
+                                <div className={"block text-sm font-medium text-gray-700 text-center my-2"}>
                                     Recommended Skills and Responsibilities For The Company
                                 </div>
-                                <div className={"flex justify-center items-center gap-2"}>
+                                <div className={"flex flex-wrap justify-center items-center gap-2"}>
                                     {recommendSkills.map((skill, index) => {
                                         return (
                                             <button
                                                 key={index}
-                                                className={"text-sm bg-green-200 rounded-full px-2"}
+                                                className={"text-xs bg-indigo-200 rounded-full px-2"}
                                                 onClick={() => addSkill(skill)}
                                             >
                                                 {skill}
@@ -246,29 +256,28 @@ const AddExperience: React.FC<AddExperienceProps> = ({ companyDescriptionId, rol
                         ) : null}
                     </div>
                     <div className={"flex justify-center items-center gap-3"}>
-                        <div className={"h-12"}>
+                        <div className={"flex-grow"}>
                             <InputTextWithOptions
                                 name={"skills"}
-                                label={"Skills"}
+                                label={""}
+                                placeholder={"Example: Python, Leadership"}
                                 value={skill}
                                 type={"text"}
                                 onChange={setSkill}
                                 options={data?.searchSkills ? data?.searchSkills.skills.map((skill) => skill.name) : []}
                             />
                         </div>
-                        <button className={"rounded bg-yellow-200 px-5 h-12"} onClick={() => addSkill(skill)}>
-                            Add
-                        </button>
+                        <div>
+                            <SimpleButton label={"Add"} onClick={() => addSkill(skill)} />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className={"flex justify-end"}>
-                <button className={"rounded bg-yellow-200 px-5 h-12"} onClick={submit}>
-                    Create
-                </button>
+                <div className={"flex justify-center"}>
+                    <SimpleButton label={"Create"} onClick={submit} />
+                </div>
             </div>
         </div>
     )
 }
 
-export default AddExperience
+export default CreateExperience

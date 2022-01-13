@@ -88,7 +88,7 @@ const InterviewPrep: React.FC = () => {
                                 </div>
                             ),
                         },
-                        { title: "Tips Before The InterviewPrep", detail: <div>Tip Before Interview Detail</div> },
+                        { title: "Interview Tips", detail: <div>Tip Before Interview Detail</div> },
                     ]}
                 />
             </div>

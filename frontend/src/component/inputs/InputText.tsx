@@ -1,5 +1,4 @@
 import React from "react"
-import "./InputText.css"
 
 interface InputTextProps {
     name: string
@@ -7,42 +6,27 @@ interface InputTextProps {
     value: string
     type: "text" | "password"
     onChange: (value: string) => void
+    placeholder?: string
     onKeyPress?: (event: React.KeyboardEvent<HTMLInputElement>) => void
-    background?: "white" | "transparent"
 }
 
-const InputText: React.FC<InputTextProps> = ({
-    name,
-    label,
-    value,
-    type,
-    onKeyPress,
-    onChange,
-    background = "white",
-}) => {
-    let backgroundCSS = "bg-white"
-    if (background === "transparent") backgroundCSS = "bg-transparent"
-
+const InputText: React.FC<InputTextProps> = ({ name, label, value, type, placeholder, onKeyPress, onChange }) => {
     return (
-        <div className={"mb-4 relative"}>
-            <input
-                className={`__input_text_input ${
-                    value !== "" ? "filled" : ""
-                } border border-gray-400 appearance-none rounded w-full px-3 py-3 pt-5 pb-2 focus focus:border-indigo-600 focus:outline-none active:outline-none active:border-indigo-600 ${backgroundCSS}`}
-                type={type}
-                value={value}
-                id={name}
-                onKeyPress={onKeyPress}
-                onChange={(event) => onChange(event.target.value)}
-            />
-            <label
-                className={
-                    "__input_text_label absolute mb-0 -mt-2 pt-4 pl-3 leading-tighter text-gray-400 text-base mt-2 cursor-text"
-                }
-                htmlFor={name}
-            >
+        <div className={"relative"}>
+            <label className={"block text-sm font-medium text-gray-700"} htmlFor={name}>
                 {label}
             </label>
+            <div className={"mt-1"}>
+                <input
+                    className={`shadow-sm border focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2`}
+                    type={type}
+                    value={value}
+                    id={name}
+                    onKeyPress={onKeyPress}
+                    placeholder={placeholder}
+                    onChange={(event) => onChange(event.target.value)}
+                />
+            </div>
         </div>
     )
 }

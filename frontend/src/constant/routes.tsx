@@ -8,7 +8,7 @@ import InterviewPrep from "../pages/InterviewPrep"
 import MockInterview from "../pages/MockInterview"
 import ViewMockInterview from "../pages/ViewMockInterview"
 import Dashboard from "../pages/Dashboard"
-import AddExperience from "../pages/AddExperience"
+import CreateExperience from "../pages/CreateExperience"
 
 interface IRoute {
     path: string
@@ -52,7 +52,21 @@ export const CREATE_POSITION_PAGE: IRoute = {
 export const CREATE_EXPERIENCE_PAGE: IRoute = {
     path: "/experience/create",
     isPrivate: true,
-    component: <AddExperience companyDescriptionId={null} roleId={null} />,
+    component: (
+        <div className={"bg-white shadow overflow-hidden sm:rounded-lg max-w-3xl p-5"}>
+            <div>
+                <h2 className={"text-lg leading-6 font-medium text-gray-900"}>Create New Experience</h2>
+                <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                    The STAR (<strong>Situation</strong>, <strong>Task</strong>, <strong>Action</strong> and{" "}
+                    <strong>Result</strong>) method helps you create an easy-to-follow story with a clear conflict and
+                    resolution. By using this strategy, you can make sure you're fully addressing the interviewer's
+                    question while also demonstrating how you were able to overcome previous challenges and be
+                    successful.
+                </p>
+            </div>
+            <CreateExperience companyDescriptionId={null} roleId={null} />
+        </div>
+    ),
 }
 
 export const INTERVIEW_PAGE: IRoute = {
