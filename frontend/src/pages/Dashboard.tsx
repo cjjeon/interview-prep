@@ -77,9 +77,9 @@ const Companies: React.FC = () => {
                         {({ open }) => (
                             <>
                                 <Disclosure.Button className={"text-left block hover:bg-gray-100 w-full"}>
-                                    <div className="py-2 flex items-center sm:px-6">
+                                    <div className="py-2 flex items-center px-6">
                                         <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-                                            <div className="truncate">
+                                            <div>
                                                 <div className="flex flex-col text-sm">
                                                     <p className="font-medium text-indigo-600 truncate">
                                                         {companyDescription.company.name}
@@ -108,13 +108,11 @@ const Companies: React.FC = () => {
                                 >
                                     <Disclosure.Panel className={"flex"}>
                                         <div className={"bg-blue-200 w-2"} />
-                                        <div className={"p-4 w-full"}>
-                                            <div className={"w-full flex flex-col gap-2 my-2"}>
-                                                <div className={"flex justify-between items-center"}>
+                                        <div className={"py-2 px-6 w-full"}>
+                                            <div className={"w-full my-2"}>
+                                                <div className={"flex justify-between items-center mb-2"}>
                                                     <div>
-                                                        <h2 className={"text-lg leading-6 font-medium text-gray-900"}>
-                                                            Role
-                                                        </h2>
+                                                        <h2 className={"leading-6 font-medium text-gray-900"}>Role</h2>
                                                     </div>
                                                     <div className={"flex justify-center"}>
                                                         <button
@@ -135,56 +133,68 @@ const Companies: React.FC = () => {
                                                         </button>
                                                     </div>
                                                 </div>
-                                                {companyDescription.roles.map((role) => {
-                                                    return (
-                                                        <div
-                                                            key={role.id}
-                                                            className={
-                                                                "border rounded w-full flex justify-between items-center px-3 py-1 cursor-pointer hover:bg-gray-100"
-                                                            }
-                                                            onClick={() =>
-                                                                navigate(
-                                                                    INTERVIEW_PAGE.path
-                                                                        .replace(
-                                                                            ":companyDescriptionId",
-                                                                            companyDescription.id
-                                                                        )
-                                                                        .replace(":roleId", role.id)
-                                                                )
-                                                            }
-                                                        >
-                                                            <div>
-                                                                <div
-                                                                    className={
-                                                                        "text-sm font-medium text-indigo-600 mb-1"
-                                                                    }
-                                                                >
-                                                                    {role.name}
+                                                {companyDescription.roles.length > 0 ? (
+                                                    companyDescription.roles.map((role) => {
+                                                        return (
+                                                            <div
+                                                                key={role.id}
+                                                                className={
+                                                                    "border rounded w-full flex justify-between items-center px-3 py-1 cursor-pointer hover:bg-gray-100"
+                                                                }
+                                                                onClick={() =>
+                                                                    navigate(
+                                                                        INTERVIEW_PAGE.path
+                                                                            .replace(
+                                                                                ":companyDescriptionId",
+                                                                                companyDescription.id
+                                                                            )
+                                                                            .replace(":roleId", role.id)
+                                                                    )
+                                                                }
+                                                            >
+                                                                <div>
+                                                                    <div
+                                                                        className={
+                                                                            "text-sm font-medium text-indigo-600 mb-1"
+                                                                        }
+                                                                    >
+                                                                        {role.name}
+                                                                    </div>
+                                                                    <div
+                                                                        className={
+                                                                            "text-xs flex flex-wrap gap-x-3 gap-y-1"
+                                                                        }
+                                                                    >
+                                                                        {role.skills.map((skill) => {
+                                                                            return (
+                                                                                <div
+                                                                                    className={
+                                                                                        "bg-indigo-200 rounded-full px-2"
+                                                                                    }
+                                                                                >
+                                                                                    {skill.name}
+                                                                                </div>
+                                                                            )
+                                                                        })}
+                                                                    </div>
                                                                 </div>
-                                                                <div
-                                                                    className={"text-xs flex flex-wrap gap-x-3 gap-y-1"}
-                                                                >
-                                                                    {role.skills.map((skill) => {
-                                                                        return (
-                                                                            <div
-                                                                                className={
-                                                                                    "bg-indigo-200 rounded-full px-2"
-                                                                                }
-                                                                            >
-                                                                                {skill.name}
-                                                                            </div>
-                                                                        )
-                                                                    })}
-                                                                </div>
-                                                            </div>
 
-                                                            <ChevronRightIcon
-                                                                className={`h-5 w-5 text-gray-400`}
-                                                                aria-hidden="true"
-                                                            />
-                                                        </div>
-                                                    )
-                                                })}
+                                                                <ChevronRightIcon
+                                                                    className={`h-5 w-5 text-gray-400`}
+                                                                    aria-hidden="true"
+                                                                />
+                                                            </div>
+                                                        )
+                                                    })
+                                                ) : (
+                                                    <div
+                                                        className={
+                                                            "flex justify-center items-center py-3 block text-sm font-medium text-gray-900"
+                                                        }
+                                                    >
+                                                        No Roles has been added
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </Disclosure.Panel>

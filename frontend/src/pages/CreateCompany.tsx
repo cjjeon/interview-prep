@@ -105,7 +105,7 @@ const CreateCompany: React.FC = () => {
                         <div>
                             <div className={"flex flex-col gap-2 block text-sm font-medium text-gray-700 mb-3"}>
                                 <div>
-                                    Most interviewers are interested to know if the candidates are interested in the
+                                    Some interviewers are interested to know if the candidates are interested in the
                                     company. So, they will ask questions such as "Can you tell us about our company?".
                                 </div>
                                 <div>

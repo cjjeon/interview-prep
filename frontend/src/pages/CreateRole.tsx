@@ -94,22 +94,21 @@ const CreateRole: React.FC = () => {
     }
 
     return (
-        <div className={"flex flex-col justify-center h-screen w-full p-20 gap-10"}>
-            <div>
-                <h1 className={"text-3xl mb-5"}>Know The Job Position</h1>
-                <div>
+        <div className={"bg-white shadow overflow-hidden sm:rounded-lg max-w-3xl"}>
+            <div className={"px-4 py-5 sm:px-6"}>
+                <h1 className={"text-lg leading-6 font-medium text-gray-900"}>Know The Job Position</h1>
+                <p className="mt-1 text-sm text-gray-500">
                     When you are doing interview, it's important to understand what company is looking for. Often, you
                     can find what the company is looking for in the job description.
-                </div>
+                </p>
             </div>
-            <div className={"flex flex-col gap-5"}>
+            <div className={"flex flex-col gap-5 px-4 sm:px-6 mb-3"}>
                 <FadeInOut
                     components={[
                         <div>
-                            <h3>What position you are applying for?</h3>
                             <InputTextWithOptions
                                 name={"position"}
-                                label={"Enter the name of role"}
+                                label={"What position you are applying for?"}
                                 value={role}
                                 type={"text"}
                                 onChange={setRole}
@@ -120,43 +119,47 @@ const CreateRole: React.FC = () => {
                                         ? data.searchRoles.roles.map((role: any) => role.name)
                                         : []
                                 }
+                                placeholder={"Example: Full Stack Engineer"}
                                 background={"transparent"}
                             />
                         </div>,
-                        <div className={"flex flex-col gap-4"}>
-                            <div>
-                                There are high chances during the interview that they will ask questions related to
-                                job's requirements, skills, and responsibilities. And, you should be prepared to show
-                                that you have the experience and skills to do the job. And, these points are often
-                                listed in the job description post.
+                        <div>
+                            <div className={"flex flex-col gap-2 block text-sm font-medium text-gray-700 mb-3"}>
+                                <div>
+                                    There are high chances during the interview that they will ask questions related to
+                                    job's requirements, skills, and responsibilities. And, you should be prepared to
+                                    show that you have the experience and skills to do the job. And, these points are
+                                    often listed in the job description post.
+                                </div>
+                                <div>
+                                    Can you try list out all the requirements, skills, and responsibilities of the job?
+                                    This will help the tool to find out what questions might help you on the interview.
+                                </div>
+                                <div>
+                                    For Example, as software developer, add skills for Python, Golang, Architecture,
+                                    Microservices, Scalability, etc. Or, for the soft skills, add something like
+                                    Leadership, Management, etc.
+                                </div>
                             </div>
-                            <div>
-                                Can you try list out all the requirements, skills, and responsibilities of the job? This
-                                will help the tool to find out what questions might help you on the interview.
-                            </div>
-                            <div>
-                                For Example, as software developer, add skills for Python, Golang, Architecture,
-                                Microservices, Scalability, etc. Or, for the soft skills, add something like Leadership,
-                                Management, etc.
-                            </div>
-                            <div className={"my-5 p-8 border-4 rounded-lg border-dotted"}>
+                            <div
+                                className={
+                                    "my-5 border-2 border-gray-300 border-dashed rounded-lg p-6 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                }
+                            >
                                 {skills.length === 0 ? (
                                     <div className={"flex flex-col justify-center items-center text-center"}>
-                                        <div className={"text-lg font-bold italic"}>
-                                            No Job Requirements, Skills or Responsibilities have been added
+                                        <div className={"mt-2 block text-sm font-medium text-gray-900"}>
+                                            No Skills or Responsibilities have been added
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className={"flex justify-center flex-wrap gap-2 relative"}>
-                                        <div className={"absolute -top-6 -left-6 text-xs"}>
-                                            List of requirements, skills or responsibilities:
-                                        </div>
+                                    <div className={"flex justify-center flex-wrap gap-2 text-xs "}>
                                         {skills.map((s, index) => {
                                             return (
                                                 <div
                                                     key={index}
                                                     className={
-                                                        "flex items-center gap-2 border-2 rounded-full bg-blue-100 px-3 text-sm"
+                                                        "flex items-center gap-2 bg-indigo-200 rounded-full px-2"
                                                     }
                                                 >
                                                     <div>{s}</div>
@@ -172,11 +175,11 @@ const CreateRole: React.FC = () => {
                                     </div>
                                 )}
                             </div>
-                            <div className={"flex gap-3"}>
+                            <div className={"flex gap-3 items-center"}>
                                 <div className={"flex-grow"}>
                                     <InputTextWithOptions
                                         name={"jobSkills"}
-                                        label={"Enter Job Requirement or Responsibility"}
+                                        label={"What's the skills / responsibility required for the position?"}
                                         value={skill}
                                         type={"text"}
                                         onChange={setSkill}
@@ -187,10 +190,11 @@ const CreateRole: React.FC = () => {
                                                 ? data.skills.skills.map((skill: any) => skill.name)
                                                 : []
                                         }
+                                        placeholder={"Example: Python, React, Microservices, Leadership, Management"}
                                         background={"transparent"}
                                     />
                                 </div>
-                                <div className={"flex-nonw w-24"}>
+                                <div>
                                     <SimpleButton label={"Add Skill"} onClick={addSkill} />
                                 </div>
                             </div>
