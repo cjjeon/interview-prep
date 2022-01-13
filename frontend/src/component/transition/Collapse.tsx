@@ -20,14 +20,12 @@ const Collapse: React.FC<CollapseProp> = ({ isOpen, minHeight = 0, children, cla
         <div
             className={className}
             style={{
-                overflow: isOpen ? "auto" : "hidden",
+                overflow: "hidden",
                 transition: "0.5s max-height",
                 maxHeight: isOpen ? childHeight : minHeight,
             }}
         >
-            <div ref={childRef} className={"overflow-visible"}>
-                {children}
-            </div>
+            <div ref={childRef}>{children}</div>
         </div>
     )
 }

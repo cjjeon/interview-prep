@@ -3,9 +3,10 @@ import { gql, useQuery } from "@apollo/client"
 import Loading from "../component/loading/Loading"
 import { ChevronRightIcon, PlusCircleIcon } from "@heroicons/react/solid"
 import { useAuth0 } from "@auth0/auth0-react"
-import { Disclosure, Transition } from "@headlessui/react"
+import { Disclosure } from "@headlessui/react"
 import { useNavigate } from "react-router-dom"
 import { COMPANY_CREATE_PAGE, CREATE_EXPERIENCE_PAGE, CREATE_POSITION_PAGE, INTERVIEW_PAGE } from "../constant/routes"
+import Collapse from "../component/transition/Collapse"
 
 const GET_COMPANIES = gql`
     query {
@@ -98,107 +99,97 @@ const Companies: React.FC = () => {
                                         </div>
                                     </div>
                                 </Disclosure.Button>
-                                <Transition
-                                    enter="transition duration-200 ease-out"
-                                    enterFrom="transform scale-95 opacity-0"
-                                    enterTo="transform scale-100 opacity-100"
-                                    leave="transition duration-100 ease-out"
-                                    leaveFrom="transform scale-100 opacity-100"
-                                    leaveTo="transform scale-95 opacity-0"
-                                >
-                                    <Disclosure.Panel className={"flex"}>
-                                        <div className={"bg-blue-200 w-2"} />
-                                        <div className={"py-2 px-6 w-full"}>
-                                            <div className={"w-full my-2"}>
-                                                <div className={"flex justify-between items-center mb-2"}>
-                                                    <div>
-                                                        <h2 className={"leading-6 font-medium text-gray-900"}>Role</h2>
-                                                    </div>
-                                                    <div className={"flex justify-center"}>
-                                                        <button
+
+                                <Collapse isOpen={open}>
+                                    <div className={"bg-blue-200 w-2"} />
+                                    <div className={"py-2 px-6 w-full"}>
+                                        <div className={"w-full my-2"}>
+                                            <div className={"flex justify-between items-center mb-2"}>
+                                                <div>
+                                                    <h2 className={"leading-6 font-medium text-gray-900"}>Role</h2>
+                                                </div>
+                                                <div className={"flex justify-center"}>
+                                                    <button
+                                                        className={
+                                                            "bg-amber-200 rounded p-2 cursor-pointer flex gap-2 hover:bg-amber-300 justify-center items-center"
+                                                        }
+                                                        onClick={() =>
+                                                            navigate(
+                                                                CREATE_POSITION_PAGE.path.replace(
+                                                                    ":companyDescriptionId",
+                                                                    companyDescription.id
+                                                                )
+                                                            )
+                                                        }
+                                                    >
+                                                        <PlusCircleIcon className={"h-5 w-5"} />
+                                                        <div className={"text-xs md:text-sm"}>New Role</div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            {companyDescription.roles.length > 0 ? (
+                                                companyDescription.roles.map((role) => {
+                                                    return (
+                                                        <div
+                                                            key={role.id}
                                                             className={
-                                                                "bg-amber-200 rounded p-2 cursor-pointer flex gap-2 hover:bg-amber-300 justify-center items-center"
+                                                                "border rounded w-full flex justify-between items-center px-3 py-1 cursor-pointer hover:bg-gray-100"
                                                             }
                                                             onClick={() =>
                                                                 navigate(
-                                                                    CREATE_POSITION_PAGE.path.replace(
-                                                                        ":companyDescriptionId",
-                                                                        companyDescription.id
-                                                                    )
+                                                                    INTERVIEW_PAGE.path
+                                                                        .replace(
+                                                                            ":companyDescriptionId",
+                                                                            companyDescription.id
+                                                                        )
+                                                                        .replace(":roleId", role.id)
                                                                 )
                                                             }
                                                         >
-                                                            <PlusCircleIcon className={"h-5 w-5"} />
-                                                            <div className={"text-xs md:text-sm"}>New Role</div>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                {companyDescription.roles.length > 0 ? (
-                                                    companyDescription.roles.map((role) => {
-                                                        return (
-                                                            <div
-                                                                key={role.id}
-                                                                className={
-                                                                    "border rounded w-full flex justify-between items-center px-3 py-1 cursor-pointer hover:bg-gray-100"
-                                                                }
-                                                                onClick={() =>
-                                                                    navigate(
-                                                                        INTERVIEW_PAGE.path
-                                                                            .replace(
-                                                                                ":companyDescriptionId",
-                                                                                companyDescription.id
-                                                                            )
-                                                                            .replace(":roleId", role.id)
-                                                                    )
-                                                                }
-                                                            >
-                                                                <div>
-                                                                    <div
-                                                                        className={
-                                                                            "text-sm font-medium text-indigo-600 mb-1"
-                                                                        }
-                                                                    >
-                                                                        {role.name}
-                                                                    </div>
-                                                                    <div
-                                                                        className={
-                                                                            "text-xs flex flex-wrap gap-x-3 gap-y-1"
-                                                                        }
-                                                                    >
-                                                                        {role.skills.map((skill) => {
-                                                                            return (
-                                                                                <div
-                                                                                    className={
-                                                                                        "bg-indigo-200 rounded-full px-2"
-                                                                                    }
-                                                                                >
-                                                                                    {skill.name}
-                                                                                </div>
-                                                                            )
-                                                                        })}
-                                                                    </div>
+                                                            <div>
+                                                                <div
+                                                                    className={
+                                                                        "text-sm font-medium text-indigo-600 mb-1"
+                                                                    }
+                                                                >
+                                                                    {role.name}
                                                                 </div>
-
-                                                                <ChevronRightIcon
-                                                                    className={`h-5 w-5 text-gray-400`}
-                                                                    aria-hidden="true"
-                                                                />
+                                                                <div
+                                                                    className={"text-xs flex flex-wrap gap-x-3 gap-y-1"}
+                                                                >
+                                                                    {role.skills.map((skill) => {
+                                                                        return (
+                                                                            <div
+                                                                                className={
+                                                                                    "bg-indigo-200 rounded-full px-2"
+                                                                                }
+                                                                            >
+                                                                                {skill.name}
+                                                                            </div>
+                                                                        )
+                                                                    })}
+                                                                </div>
                                                             </div>
-                                                        )
-                                                    })
-                                                ) : (
-                                                    <div
-                                                        className={
-                                                            "flex justify-center items-center py-3 block text-sm font-medium text-gray-900"
-                                                        }
-                                                    >
-                                                        No Roles has been added
-                                                    </div>
-                                                )}
-                                            </div>
+
+                                                            <ChevronRightIcon
+                                                                className={`h-5 w-5 text-gray-400`}
+                                                                aria-hidden="true"
+                                                            />
+                                                        </div>
+                                                    )
+                                                })
+                                            ) : (
+                                                <div
+                                                    className={
+                                                        "flex justify-center items-center py-3 block text-sm font-medium text-gray-900"
+                                                    }
+                                                >
+                                                    No Roles has been added
+                                                </div>
+                                            )}
                                         </div>
-                                    </Disclosure.Panel>
-                                </Transition>
+                                    </div>
+                                </Collapse>
                             </>
                         )}
                     </Disclosure>
