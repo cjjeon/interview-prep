@@ -113,7 +113,7 @@ const MockInterview: React.FC = () => {
                 },
             }).then()
         }
-    }, [communicationScore, confidenceScore, positivityScore, loading])
+    }, [communicationScore, confidenceScore, positivityScore, loading, mockInterviewId, updateMockInterviewScore])
 
     if (loading || !mockInterviewId || !data) return <Loading />
 

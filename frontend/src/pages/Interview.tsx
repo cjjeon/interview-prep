@@ -16,7 +16,7 @@ const Interview: React.FC = () => {
     }
 
     return (
-        <div className={"text-center flex w-full"}>
+        <div className={"bg-white shadow overflow-hidden sm:rounded-lg max-w-3xl"}>
             <Collapsible
                 items={[
                     { title: "Review Past Experience", detail: <PastExperience /> },

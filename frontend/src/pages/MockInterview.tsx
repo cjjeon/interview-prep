@@ -40,6 +40,7 @@ const MockInterview: React.FC = () => {
     const [recordedChunks, setRecordedChunks] = React.useState<Blob[]>([])
 
     const [deviceId, setDeviceId] = React.useState<string>("")
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [devices, setDevices] = React.useState<MediaDeviceInfo[]>([])
 
     const webcamRef = React.useRef<Webcam>(null)
@@ -74,7 +75,7 @@ const MockInterview: React.FC = () => {
                 }
             })
         }
-    }, [start, recordedChunks, uploadMockInterview])
+    }, [start, recordedChunks, uploadMockInterview, companyDescriptionId, data, navigate, roleId])
 
     const handleDataAvailable = React.useCallback(
         ({ data }: BlobEvent) => {
@@ -94,7 +95,7 @@ const MockInterview: React.FC = () => {
             mediaRecorderRef.current.ondataavailable = handleDataAvailable
             mediaRecorderRef.current.start()
         }
-    }, [webcamRef, setStart, mediaRecorderRef])
+    }, [webcamRef, setStart, mediaRecorderRef, handleDataAvailable])
 
     const handleDevices = React.useCallback(
         (mediaDevices: MediaDeviceInfo[]) => {
@@ -112,7 +113,7 @@ const MockInterview: React.FC = () => {
             mediaRecorderRef.current.stop()
             setStart(false)
         }
-    }, [mediaRecorderRef, setStart, recordedChunks])
+    }, [mediaRecorderRef, setStart])
 
     React.useEffect(() => {
         navigator.mediaDevices.enumerateDevices().then((mediaDevices) => {
