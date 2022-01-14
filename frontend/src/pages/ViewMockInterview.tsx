@@ -48,7 +48,7 @@ interface RateInterviewProps {
 const RateInterview: React.FC<RateInterviewProps> = ({ title, score, onChange }) => {
     return (
         <div className={"flex flex-col gap-2"}>
-            <div>{title}</div>
+            <div className={"font-medium text-indigo-600 truncate text-sm"}>{title}</div>
             <div className={"flex justify-center items-center gap-3"}>
                 <FaRegDizzy
                     size={score === 0 ? 30 : 25}
@@ -118,36 +118,40 @@ const MockInterview: React.FC = () => {
     if (loading || !mockInterviewId || !data) return <Loading />
 
     return (
-        <div className={"flex flex-col gap-3 p-3"}>
+        <div className={"flex flex-col gap-10"}>
             <div>
-                Reviewing your own mock interview is important! Try watch the way you answer the question and evaluate.
+                <h1 className={"text-xl leading-6 font-medium text-gray-900"}>Self Review Mock Interview</h1>
+                <p className="mt-1 text-sm text-gray-500">
+                    Try and become a interviewer! Evaluate your interviewing skills will help you on interview.
+                </p>
             </div>
-            <div className={"text-lg font-bold"}>Question: {data.mockInterview.question}</div>
-            <div className={"my-5"}>
-                <ReactPlayer url={`${API_URL}/video/${data.mockInterview.videoUrl}`} controls />
-            </div>
-            <div className={"flex flex-col gap-5"}>
-                <div className={"text-lg font-medium"}>Rate Your Interview</div>
+            <div className={"bg-white shadow overflow-hidden sm:rounded-md p-5"}>
                 <div>
-                    <RateInterview
-                        title={"How clear was your answer?"}
-                        score={communicationScore}
-                        onChange={setCommunicationScore}
-                    />
+                    <h1 className={"text-xl leading-6 font-medium text-gray-900"}>Interview Question</h1>
+                    <p className="mt-1 text-gray-500">{data.mockInterview.question}</p>
                 </div>
-                <div>
-                    <RateInterview
-                        title={"How confidence did you answer the question?"}
-                        score={confidenceScore}
-                        onChange={setConfidenceScore}
-                    />
+                <div className={"flex justify-center items-center m-10"}>
+                    <ReactPlayer url={`${API_URL}/video/${data.mockInterview.videoUrl}`} controls />
                 </div>
-                <div>
-                    <RateInterview
-                        title={"How was your tone? Was it positive?"}
-                        score={positivityScore}
-                        onChange={setPositivityScore}
-                    />
+                <div className={"flex flex-col gap-3"}>
+                    <div className={"text-lg font-medium text-gray-900"}>Rate Your Interview</div>
+                    <div className={"flex flex-col items-center gap-3"}>
+                        <RateInterview
+                            title={"How clear was your answer?"}
+                            score={communicationScore}
+                            onChange={setCommunicationScore}
+                        />
+                        <RateInterview
+                            title={"How confidence did you answer the question?"}
+                            score={confidenceScore}
+                            onChange={setConfidenceScore}
+                        />
+                        <RateInterview
+                            title={"How was your tone? Was it positive?"}
+                            score={positivityScore}
+                            onChange={setPositivityScore}
+                        />
+                    </div>
                 </div>
             </div>
         </div>
