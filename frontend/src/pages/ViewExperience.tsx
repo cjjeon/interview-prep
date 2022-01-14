@@ -32,7 +32,7 @@ interface ViewExperienceProps {
     experienceId: number
 }
 
-const ViewEditExperience: React.FC<ViewExperienceProps> = ({ experienceId }) => {
+const ViewExperience: React.FC<ViewExperienceProps> = ({ experienceId }) => {
     const { data, loading } = useQuery<GetExperienceData>(GET_EXPERIENCE, { variables: { id: experienceId } })
 
     if (loading) return <Loading />
@@ -70,4 +70,4 @@ const ViewEditExperience: React.FC<ViewExperienceProps> = ({ experienceId }) => 
     )
 }
 
-export default ViewEditExperience
+export default ViewExperience

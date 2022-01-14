@@ -302,9 +302,9 @@ const Dashboard = () => {
     return (
         <div className={"flex flex-col gap-10"}>
             <div>
-                <h1 className={"text-xl leading-6 font-medium text-gray-900"}>Hi! {user.name}</h1>
+                <h1 className={"text-2xl leading-6 font-medium text-gray-900 my-3"}>Hi! {user.name}</h1>
                 <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                    Welcome Back! I hope you can <strong className={"font-bold"}>ACE</strong> your next interview!
+                    Welcome! I hope you can <strong className={"font-bold"}>ACE</strong> your next interview!
                 </p>
             </div>
             <div>

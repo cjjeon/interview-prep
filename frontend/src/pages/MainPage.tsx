@@ -2,7 +2,6 @@ import React from "react"
 import { useNavigate } from "react-router-dom"
 import { DASHBOARD_PAGE, LOGIN_PAGE } from "../constant/routes"
 import { useAuth0 } from "@auth0/auth0-react"
-import Loading from "../component/loading/Loading"
 
 const MainPage: React.FC = () => {
     const navigate = useNavigate()
@@ -14,10 +13,6 @@ const MainPage: React.FC = () => {
         } else {
             navigate(DASHBOARD_PAGE.path)
         }
-    }
-
-    if (isLoading) {
-        return <Loading />
     }
 
     return (
