@@ -86,7 +86,18 @@ const InterviewPrep: React.FC = () => {
                                 </div>
                             ),
                         },
-                        { title: "Interview Tips", detail: <div>Tip Before Interview Detail</div> },
+                        {
+                            title: "Interview Tips",
+                            detail: (
+                                <div
+                                    className={
+                                        "flex justify-center items-center my-3 block text-sm font-medium text-gray-900"
+                                    }
+                                >
+                                    This feature is not available atm.
+                                </div>
+                            ),
+                        },
                     ]}
                 />
             </div>
