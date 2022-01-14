@@ -99,7 +99,7 @@ const PastExperience: React.FC = () => {
                                     }}
                                 >
                                     <div className="flex flex-col text-sm text-left">
-                                        <p className="font-medium text-indigo-600 truncate">{experience.summary}</p>
+                                        <p className="font-medium text-indigo-600 underline">{experience.summary}</p>
                                         <div className="mt-1 flex flex-wrap gap-2">
                                             {experience.skills.map((skill, index) => {
                                                 return (

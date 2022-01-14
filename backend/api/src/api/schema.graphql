@@ -91,6 +91,7 @@ type InterviewQuestion {
 }
 
 type MockInterview {
+    id: ID!
     question: String
     videoUrl: String
     communicationScore: Int
@@ -101,7 +102,7 @@ type MockInterview {
 type Query {
     searchCompanies(filterName: String): CompaniesResult
     companyDescriptions: [CompanyDescription]!
-    companyDescription(companyDescriptionId: ID! roleId: ID!): CompanyDescription!
+    companyDescription(companyDescriptionId: ID!, roleId: ID!): CompanyDescription!
     searchRoles(filterName: String): RolesResult
     experience(id: ID!): Experience
     experiences(companyDescriptionId: ID, roleId: ID): [Experience]!
@@ -109,6 +110,7 @@ type Query {
     user: UserResult!
     interviewQuestion: InterviewQuestion!
     mockInterview(id: ID!): MockInterview!
+    mockInterviews(companyDescriptionId: ID, roleId: ID): [MockInterview]!
 }
 
 type Mutation {

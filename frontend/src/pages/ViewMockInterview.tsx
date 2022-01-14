@@ -137,17 +137,17 @@ const MockInterview: React.FC = () => {
                     <div className={"text-lg font-medium text-gray-900"}>Rate Your Interview</div>
                     <div className={"flex flex-col items-center gap-3"}>
                         <RateInterview
-                            title={"How clear was your answer?"}
+                            title={"Was your answer or message clear and concise?"}
                             score={communicationScore}
                             onChange={setCommunicationScore}
                         />
                         <RateInterview
-                            title={"How confidence did you answer the question?"}
+                            title={"How confidence did you answer the question? Did you notice any bad habits?"}
                             score={confidenceScore}
                             onChange={setConfidenceScore}
                         />
                         <RateInterview
-                            title={"How was your tone? Was it positive?"}
+                            title={"How was your tone and posture? Was it positive, enthusiastic, and professional?"}
                             score={positivityScore}
                             onChange={setPositivityScore}
                         />

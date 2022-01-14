@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from ariadne import convert_kwargs_to_snake_case
 from werkzeug.datastructures import FileStorage
@@ -25,6 +25,24 @@ def query_mock_interview(_, info: GraphQLResolveInfo, id: int):
         return {}
 
     return interview_question_user_history.to_dict()
+
+
+@function_time_logging
+@convert_kwargs_to_snake_case
+def query_mock_interviews(_, info: GraphQLResolveInfo, company_description_id=None, role_id=None):
+    query = InterviewQuestionUserHistory.query \
+        .filter(InterviewQuestionUserHistory.user_id == info.context.user.user_id)
+
+    if company_description_id is not None:
+        query = query.filter(InterviewQuestionUserHistory.company_description_id == company_description_id)
+
+    if role_id is not None:
+        query = query.filter(InterviewQuestionUserHistory.role_id == role_id)
+
+    interview_question_user_histories: List[InterviewQuestionUserHistory] = query.all()
+
+    return [interview_question_user_history.to_dict() for interview_question_user_history in
+            interview_question_user_histories]
 
 
 @function_time_logging

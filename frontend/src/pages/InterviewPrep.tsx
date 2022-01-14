@@ -1,11 +1,11 @@
 import React from "react"
-import SimpleButton from "../component/buttons/SimpleButton"
 import Collapsible from "../component/collapsibles/CollapsibleItem"
 import PastExperience from "./PastExperience"
 import { useNavigate, useParams } from "react-router-dom"
-import { DASHBOARD_PAGE, MOCK_INTERVIEW_PAGE } from "../constant/routes"
+import { DASHBOARD_PAGE, MOCK_INTERVIEW_PAGE, MOCK_INTERVIEW_VIEW_PAGE } from "../constant/routes"
 import { gql, useQuery } from "@apollo/client"
 import Loading from "../component/loading/Loading"
+import { PlusCircleIcon } from "@heroicons/react/solid"
 
 const GET_COMPANY_DESCRIPTION = gql`
     query ($companyDescriptionId: ID!, $roleId: ID!) {
@@ -16,6 +16,11 @@ const GET_COMPANY_DESCRIPTION = gql`
             roles {
                 name
             }
+        }
+
+        mockInterviews(companyDescriptionId: $companyDescriptionId, roleId: $roleId) {
+            id
+            question
         }
     }
 `
@@ -29,6 +34,10 @@ interface GetCompanyDescription {
             name: string
         }[]
     }
+    mockInterviews: {
+        id: number
+        question: string
+    }[]
 }
 
 const InterviewPrep: React.FC = () => {
@@ -70,18 +79,68 @@ const InterviewPrep: React.FC = () => {
                             subtitle:
                                 "Often, we do not know how we answer and act during the interview. This feature is for you to analyze yourself during the interview.",
                             detail: (
-                                <div className={"flex flex-col gap-3 p-3"}>
-                                    <div className={"flex justify-center"}>
-                                        <SimpleButton
-                                            label={"Start Mock Interview!"}
-                                            onClick={() =>
-                                                navigate(
-                                                    MOCK_INTERVIEW_PAGE.path
-                                                        .replace(":companyDescriptionId", companyDescriptionId)
-                                                        .replace(":roleId", roleId)
-                                                )
-                                            }
-                                        />
+                                <div className={"flex flex-col gap-3"}>
+                                    <div className={"flex justify-between items-center mb-2"}>
+                                        <div>
+                                            <h2 className={"leading-6 font-medium text-gray-900"}>Mock Interviews</h2>
+                                        </div>
+                                        <div className={"flex justify-center"}>
+                                            <button
+                                                className={
+                                                    "bg-amber-200 rounded p-2 cursor-pointer flex gap-2 hover:bg-amber-300 justify-center items-center"
+                                                }
+                                                onClick={() =>
+                                                    navigate(
+                                                        MOCK_INTERVIEW_PAGE.path
+                                                            .replace(":companyDescriptionId", companyDescriptionId)
+                                                            .replace(":roleId", roleId)
+                                                    )
+                                                }
+                                            >
+                                                <PlusCircleIcon className={"h-5 w-5"} />
+                                                <div className={"text-xs md:text-sm"}>Start Mock Interview!</div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        {data.mockInterviews.length === 0 ? (
+                                            <div className={"flex flex-col justify-center items-center text-center"}>
+                                                <div className={"mt-2 block text-sm font-medium text-gray-900"}>
+                                                    No Mock Interview has been Added
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="divide-y divide-gray-200">
+                                                {data.mockInterviews.map((mockInterview) => {
+                                                    return (
+                                                        <button
+                                                            key={mockInterview.id}
+                                                            className={"w-full hover:bg-gray-100 py-3"}
+                                                            onClick={() =>
+                                                                navigate(
+                                                                    MOCK_INTERVIEW_VIEW_PAGE.path
+                                                                        .replace(
+                                                                            ":companyDescriptionId",
+                                                                            companyDescriptionId
+                                                                        )
+                                                                        .replace(":roleId", roleId)
+                                                                        .replace(
+                                                                            ":mockInterviewId",
+                                                                            mockInterview.id.toString()
+                                                                        )
+                                                                )
+                                                            }
+                                                        >
+                                                            <div className="flex flex-col text-sm text-left">
+                                                                <p className="font-medium text-indigo-600 truncate underline">
+                                                                    {mockInterview.question}
+                                                                </p>
+                                                            </div>
+                                                        </button>
+                                                    )
+                                                })}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ),
@@ -94,7 +153,7 @@ const InterviewPrep: React.FC = () => {
                                         "flex justify-center items-center my-3 block text-sm font-medium text-gray-900"
                                     }
                                 >
-                                    This feature is not available atm.
+                                    This feature is coming really soon!
                                 </div>
                             ),
                         },
