@@ -13,20 +13,16 @@ interface Experience {
 }
 
 interface ExperienceData {
-    experiences: {
-        experiences: Experience[]
-    }
+    experiences: Experience[]
 }
 
 const GET_EXPERIENCES = gql`
     query getExperiences($companyDescriptionId: ID, $roleId: ID) {
         experiences(companyDescriptionId: $companyDescriptionId, roleId: $roleId) {
-            experiences {
-                id
-                summary
-                skills {
-                    name
-                }
+            id
+            summary
+            skills {
+                name
             }
         }
     }
@@ -89,33 +85,35 @@ const PastExperience: React.FC = () => {
                     </button>
                 </div>
             </div>
-            <div className={"w-full m-2"}>
-                {data?.experiences && data.experiences.experiences.length > 0 ? (
-                    <div>
-                        {data.experiences.experiences.map((experience, experienceIndex) => {
+            <div className={"w-full"}>
+                {data?.experiences && data.experiences.length > 0 ? (
+                    <div className="divide-y divide-gray-200">
+                        {data.experiences.map((experience) => {
                             return (
-                                <div
-                                    key={experienceIndex}
-                                    className={"border rounded hover:bg-yellow-200 cursor-pointer"}
+                                <button
+                                    key={experience.id}
+                                    className={"w-full hover:bg-gray-100 py-3"}
                                     onClick={() => {
                                         setViewExperienceId(experience.id)
                                         setViewExperienceModalOpen(true)
                                     }}
                                 >
-                                    <div className={"text-blue-300 underline"}>{experience.summary}</div>
-                                    <div className={"flex justify-center"}>
-                                        {experience.skills.map((skill, skillIndex) => {
-                                            return (
-                                                <div
-                                                    key={skillIndex}
-                                                    className={"bg-green-200 rounded-full p-1 m-1 text-xs font-medium"}
-                                                >
-                                                    {skill.name}
-                                                </div>
-                                            )
-                                        })}
+                                    <div className="flex flex-col text-sm text-left">
+                                        <p className="font-medium text-indigo-600 truncate">{experience.summary}</p>
+                                        <div className="mt-1 flex flex-wrap gap-2">
+                                            {experience.skills.map((skill, index) => {
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className={"text-xs bg-indigo-200 rounded-full px-2"}
+                                                    >
+                                                        {skill.name}
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
                                     </div>
-                                </div>
+                                </button>
                             )
                         })}
                     </div>

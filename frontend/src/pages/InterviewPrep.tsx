@@ -66,13 +66,11 @@ const InterviewPrep: React.FC = () => {
                             detail: <PastExperience />,
                         },
                         {
-                            title: "Mock InterviewPrep",
+                            title: "Mock Interview",
+                            subtitle:
+                                "Often, we do not know how we answer and act during the interview. This feature is for you to analyze yourself during the interview.",
                             detail: (
                                 <div className={"flex flex-col gap-3 p-3"}>
-                                    <p className="mt-1 text-sm text-gray-500">
-                                        Often, we do not know how we answer and act during the interview. This feature
-                                        is for you to analyze yourself during the interview.
-                                    </p>
                                     <div className={"flex justify-center"}>
                                         <SimpleButton
                                             label={"Start Mock Interview!"}

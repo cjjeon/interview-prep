@@ -158,6 +158,7 @@ const CreateExperience: React.FC<CreateExperienceProps> = ({ companyDescriptionI
                 <InputText
                     name={"summary"}
                     label={"What's the experience / project about? (Situation)"}
+                    placeholder={"Example: Developing a new finance module for the core accounting product."}
                     value={summary}
                     type={"text"}
                     onChange={(value) => setSummary(value)}

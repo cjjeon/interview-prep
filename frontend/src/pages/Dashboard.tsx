@@ -157,9 +157,10 @@ const Companies: React.FC = () => {
                                                                 <div
                                                                     className={"text-xs flex flex-wrap gap-x-3 gap-y-1"}
                                                                 >
-                                                                    {role.skills.map((skill) => {
+                                                                    {role.skills.map((skill, index) => {
                                                                         return (
                                                                             <div
+                                                                                key={index}
                                                                                 className={
                                                                                     "bg-indigo-200 rounded-full px-2"
                                                                                 }
@@ -204,6 +205,9 @@ const GET_EXPERIENCES = gql`
         experiences {
             id
             summary
+            skills {
+                name
+            }
         }
     }
 `
@@ -212,6 +216,9 @@ interface GetExperiences {
     experiences: {
         id: number
         summary: string
+        skills: {
+            name: string
+        }[]
     }[]
 }
 
@@ -247,7 +254,31 @@ const Experiences: React.FC = () => {
                     <div className={"flex justify-center items-center py-5 block text-sm font-medium text-gray-900"}>
                         No Experiences / Project has been added
                     </div>
-                ) : null}
+                ) : (
+                    <div className="divide-y divide-gray-200">
+                        {data.experiences.map((experience) => {
+                            return (
+                                <button key={experience.id} className={"py-4 px-6 w-full hover:bg-gray-100"}>
+                                    <div className="flex flex-col text-sm text-left">
+                                        <p className="font-medium text-indigo-600 truncate">{experience.summary}</p>
+                                        <div className="mt-1 flex flex-wrap gap-2">
+                                            {experience.skills.map((skill, index) => {
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className={"text-xs bg-indigo-200 rounded-full px-2"}
+                                                    >
+                                                        {skill.name}
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+                                </button>
+                            )
+                        })}
+                    </div>
+                )}
             </div>
         </div>
     )
