@@ -116,7 +116,7 @@ const CreateCompany: React.FC = () => {
                             <InputTextArea
                                 name={"company-description"}
                                 placeholder={
-                                    "Example: I read on your website that you’re one of the top data security companies in the US, and that you serve more than 40 Fortune 500 companies including some of the biggest tech companies like Microsoft and IBM. I also read a recent news article that mentioned you’re looking to expand into providing these services for financial institutions as well. Is that right? And can you tell me more about that?"
+                                    "Example: One of the top data security companies in the US, and that you serve more than 40 Fortune 500 companies including some of the biggest tech companies like Microsoft and IBM. Currently, the company is expanding into providing these services for financial institutions."
                                 }
                                 value={description}
                                 onChange={(value) => setDescription(value)}

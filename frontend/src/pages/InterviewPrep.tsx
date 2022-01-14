@@ -6,6 +6,7 @@ import { DASHBOARD_PAGE, MOCK_INTERVIEW_PAGE, MOCK_INTERVIEW_VIEW_PAGE } from ".
 import { gql, useQuery } from "@apollo/client"
 import Loading from "../component/loading/Loading"
 import { PlusCircleIcon } from "@heroicons/react/solid"
+import GoBackButton from "../component/buttons/GoBackButton"
 
 const GET_COMPANY_DESCRIPTION = gql`
     query ($companyDescriptionId: ID!, $roleId: ID!) {
@@ -60,6 +61,9 @@ const InterviewPrep: React.FC = () => {
     return (
         <div className={"flex flex-col gap-10"}>
             <div>
+                <div className={"my-2"}>
+                    <GoBackButton link={DASHBOARD_PAGE.path} />
+                </div>
                 <h1 className={"text-xl leading-6 font-medium text-gray-900"}>Interview Preparation</h1>
                 <p className="mt-1 max-w-2xl text-sm text-gray-500">
                     {data.companyDescription.company.name} - {data.companyDescription.roles[0].name}

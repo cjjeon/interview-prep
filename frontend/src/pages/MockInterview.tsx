@@ -4,8 +4,9 @@ import { gql, useMutation, useQuery } from "@apollo/client"
 import Loading from "../component/loading/Loading"
 import SimpleButton from "../component/buttons/SimpleButton"
 import { useNavigate, useParams } from "react-router-dom"
-import { MOCK_INTERVIEW_VIEW_PAGE } from "../constant/routes"
+import { DASHBOARD_PAGE, INTERVIEW_PAGE, MOCK_INTERVIEW_VIEW_PAGE } from "../constant/routes"
 import { BellIcon } from "@heroicons/react/solid"
+import GoBackButton from "../component/buttons/GoBackButton"
 
 const GET_INTERVIEW_QUESTION = gql`
     query getInterviewQuestion {
@@ -124,36 +125,50 @@ const MockInterview: React.FC = () => {
 
     if (loading || !data) return <Loading />
 
+    if (!companyDescriptionId || !roleId) {
+        navigate(DASHBOARD_PAGE.path)
+        return null
+    }
+
     return (
-        <div className={"bg-white shadow overflow-hidden sm:rounded-md p-5"}>
-            <div className={"border-b-2 border-dashed p-3"}>
-                <div>
-                    <h2 className={"text-lg leading-6 font-medium text-gray-900"}>Interview Question</h2>
-                    <p className="mt-1 text-base text-gray-500">{data.interviewQuestion.question}</p>
-                </div>
+        <div>
+            <div className={"my-2"}>
+                <GoBackButton
+                    link={INTERVIEW_PAGE.path
+                        .replace(":companyDescriptionId", companyDescriptionId)
+                        .replace(":roleId", roleId)}
+                />
             </div>
-            <div className={"flex justify-center items-center border-b-2 border-dashed p-5"}>
-                <Webcam audio muted videoConstraints={{ deviceId: deviceId }} ref={webcamRef} />
-            </div>
-            <div className={"p-5 text-white font-medium"}>
-                <div className="p-2 rounded-lg bg-yellow-500 shadow-lg sm:p-3">
-                    <div className={"flex gap-2"}>
-                        <div>
-                            <span className="flex p-1 rounded-lg bg-yellow-600">
-                                <BellIcon className="h-5 w-5 text-white" aria-hidden="true" />
-                            </span>
-                        </div>
-                        <span className={"text-lg font-medium mb-2 h-full "}>Quick Tip!</span>
+            <div className={"bg-white shadow overflow-hidden sm:rounded-md p-5"}>
+                <div className={"border-b-2 border-dashed p-3"}>
+                    <div>
+                        <h2 className={"text-lg leading-6 font-medium text-gray-900"}>Interview Question</h2>
+                        <p className="mt-1 text-base text-gray-500">{data.interviewQuestion.question}</p>
                     </div>
-                    <div className={"text-sm"}>{data.interviewQuestion.tip}</div>
                 </div>
-            </div>
-            <div className={"flex justify-center items-center p-5"}>
-                {start ? (
-                    <SimpleButton label={"Done Interview"} onClick={handleStop} />
-                ) : (
-                    <SimpleButton label={"Start Interview"} onClick={handleStart} />
-                )}
+                <div className={"flex justify-center items-center border-b-2 border-dashed p-5"}>
+                    <Webcam audio muted videoConstraints={{ deviceId: deviceId }} ref={webcamRef} />
+                </div>
+                <div className={"p-5 text-white font-medium"}>
+                    <div className="p-2 rounded-lg bg-yellow-500 shadow-lg sm:p-3">
+                        <div className={"flex gap-2"}>
+                            <div>
+                                <span className="flex p-1 rounded-lg bg-yellow-600">
+                                    <BellIcon className="h-5 w-5 text-white" aria-hidden="true" />
+                                </span>
+                            </div>
+                            <span className={"text-lg font-medium mb-2 h-full "}>Quick Tip!</span>
+                        </div>
+                        <div className={"text-sm"}>{data.interviewQuestion.tip}</div>
+                    </div>
+                </div>
+                <div className={"flex justify-center items-center p-5"}>
+                    {start ? (
+                        <SimpleButton label={"Done Interview"} onClick={handleStop} />
+                    ) : (
+                        <SimpleButton label={"Start Interview"} onClick={handleStart} />
+                    )}
+                </div>
             </div>
         </div>
     )

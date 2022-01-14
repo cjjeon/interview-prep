@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { gql, useMutation, useQuery } from "@apollo/client"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import Loading from "../component/loading/Loading"
 import ReactPlayer from "react-player"
 import { API_URL } from "../constant/configs"
 import { FaRegDizzy, FaRegFrown, FaRegLaughBeam, FaRegMeh, FaRegSmile } from "react-icons/fa"
+import GoBackButton from "../component/buttons/GoBackButton"
+import { DASHBOARD_PAGE, INTERVIEW_PAGE } from "../constant/routes"
 
 const GET_MOCK_INTERVIEW_QUESTION = gql`
     query getMockInterview($id: ID!) {
@@ -81,7 +83,8 @@ const RateInterview: React.FC<RateInterviewProps> = ({ title, score, onChange })
 }
 
 const MockInterview: React.FC = () => {
-    const { mockInterviewId } = useParams()
+    const { companyDescriptionId, roleId, mockInterviewId } = useParams()
+    const navigate = useNavigate()
 
     const [communicationScore, setCommunicationScore] = useState<number>(2)
     const [confidenceScore, setConfidenceScore] = useState<number>(2)
@@ -115,11 +118,23 @@ const MockInterview: React.FC = () => {
         }
     }, [communicationScore, confidenceScore, positivityScore, loading, mockInterviewId, updateMockInterviewScore])
 
-    if (loading || !mockInterviewId || !data) return <Loading />
+    if (loading || !data) return <Loading />
+
+    if (!companyDescriptionId || !roleId || !mockInterviewId) {
+        navigate(DASHBOARD_PAGE.path)
+        return null
+    }
 
     return (
         <div className={"flex flex-col gap-10"}>
             <div>
+                <div className={"my-2"}>
+                    <GoBackButton
+                        link={INTERVIEW_PAGE.path
+                            .replace(":companyDescriptionId", companyDescriptionId)
+                            .replace(":roleId", roleId)}
+                    />
+                </div>
                 <h1 className={"text-xl leading-6 font-medium text-gray-900"}>Self Review Mock Interview</h1>
                 <p className="mt-1 text-sm text-gray-500">
                     Try and become a interviewer! Evaluate your interviewing skills will help you on interview.
