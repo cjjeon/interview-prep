@@ -1,0 +1,26 @@
+insert into "interview_question" (id, type, question, tip)
+values (6, 'TECHNICAL', 'What has your experience been like as part of an Agile software development process, if any?',
+        'The interviewer wants to know you have experience in Agile development process. Agile software development refers to software development methodologies centered around the idea of iterative development, where requirements and solutions evolve through collaboration between self-organizing cross-functional teams.'),
+       (7, 'BEHAVIOURAL',
+        'Tell me about a tough software development problem and how you solved it.',
+        'The interviewer wants to see your past experience. Try answer this question by using the experiences that you filled out. If not, try answering the question in STAR format.'),
+       (8, 'BEHAVIOURAL',
+        'Explain the concept of cloud computing to my older (not-very-technical) mother.',
+        'The interviewer wants to know your communication style and see if you can explain the question to people who are not very technical.'),
+       (9, 'BEHAVIOURAL', 'Have you ever disagreed with your boss or manager? What did you do?',
+        'The hiring manager is looking to see that you have a good relationship with those in authority. How you interact with your previous boss also says a lot about you as a person. The interviewer uses questions like these to see if you''ll be a good fit in the company.'),
+       (10, 'TECHNICAL', 'When do you consider a product to be finished?',
+        'In software development, a product is never really “finished.” What the recruiter really wants to know is your level of dedication and attention to detail. It’s acceptable to mention some level of software testing or verification as the point where the buck stops.'),
+       (11, 'BEHAVIOURAL', 'Why did you choose a career in software development?',
+        'This may be one of the most general software developer interview questions, but employers use it to gauge your passion for the job. Discussing why you chose a certain career may seem easy, but what you say will have an impact on your interview performance.'),
+       (12, 'BEHAVIOURAL', 'Can you describe the steps involved in software development?',
+        'Software development questions about process help the interviewer get a sense of your working style. Remember to be detailed when describing the steps you take to complete a project.'),
+       (13, 'BEHAVIOURAL',
+        'Can you differentiate between functional and object-oriented programming? Which one is better?',
+        'Both functional and object-oriented programming are commonly used in software development. But they have key differences and purposes that are critical for candidates to know and be able to articulate.'),
+       (14, 'BEHAVIOURAL', 'What is your greatest strength as a software developer?',
+        'When you answer this question, be careful not to sound full of yourself while still being honest. Hiring managers want to hire the best candidate, and it’s up to you to show them that you’re that candidate. Try to find a strength that makes you unique in order to make yourself more memorable.'),
+       (15, 'BEHAVIOURAL', 'What is your greatest weakness as a software developer?',
+        'Nobody’s perfect, and your interviewers aren’t expecting you to be. They just want to know what your imperfections are and what you do to overcome them. So, be honest, but always end by explaining the steps you’re taking to make sure your weaknesses don’t affect your work.');
+
+select setval(pg_get_serial_sequence('interview_question', 'id'), (select max(id) from interview_question));
