@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { useParams } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
 import Modal from "../component/modals/Modal"
-import CreateExperience from "./CreateExperience"
+import CreateExperienceModal from "./CreateExperienceModal"
 import ViewExperience from "./ViewExperience"
 import { PlusCircleIcon } from "@heroicons/react/solid"
 
@@ -48,7 +48,7 @@ const PastExperience: React.FC = () => {
                 onClose={() => setAddExperienceModalOpen(false)}
                 title={"Create New Experience"}
             >
-                <CreateExperience
+                <CreateExperienceModal
                     companyDescriptionId={companyDescriptionId ? parseInt(companyDescriptionId) : null}
                     roleId={roleId ? parseInt(roleId) : null}
                     onAfterSubmit={() => {

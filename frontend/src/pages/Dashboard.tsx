@@ -1,10 +1,10 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { gql, useQuery } from "@apollo/client"
 import Loading from "../component/loading/Loading"
 import { ChevronRightIcon, PlusCircleIcon } from "@heroicons/react/solid"
 import { useAuth0 } from "@auth0/auth0-react"
 import { Disclosure } from "@headlessui/react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { COMPANY_CREATE_PAGE, CREATE_EXPERIENCE_PAGE, CREATE_POSITION_PAGE, INTERVIEW_PAGE } from "../constant/routes"
 import Collapse from "../component/transition/Collapse"
 
@@ -45,8 +45,17 @@ interface GetCompany {
 }
 
 const Companies: React.FC = () => {
-    const { data, loading } = useQuery<GetCompany>(GET_COMPANIES)
+    const { state } = useLocation()
+
+    const { data, loading, refetch } = useQuery<GetCompany>(GET_COMPANIES)
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if (state && state.reload) {
+            refetch().then()
+        }
+    }, [state, refetch])
+
     if (loading || !data) {
         return <Loading />
     }
