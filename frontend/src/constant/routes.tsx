@@ -9,6 +9,7 @@ import MockInterview from "../pages/MockInterview"
 import ViewMockInterview from "../pages/ViewMockInterview"
 import Dashboard from "../pages/Dashboard"
 import CreateExperience from "../pages/CreateExperience"
+import ViewExperience from "../pages/ViewExperience"
 
 interface IRoute {
     path: string
@@ -55,6 +56,12 @@ export const CREATE_EXPERIENCE_PAGE: IRoute = {
     component: <CreateExperience />,
 }
 
+export const EXPERIENCE_PAGE: IRoute = {
+    path: "/experience/:experienceId",
+    isPrivate: true,
+    component: <ViewExperience />,
+}
+
 export const INTERVIEW_PAGE: IRoute = {
     path: "/company/:companyDescriptionId/position/:roleId",
     isPrivate: true,
@@ -74,6 +81,7 @@ export const MOCK_INTERVIEW_VIEW_PAGE: IRoute = {
 }
 
 export const ROUTES: IRoute[] = [
+    EXPERIENCE_PAGE,
     COMPANY_CREATE_PAGE,
     CREATE_EXPERIENCE_PAGE,
     CREATE_POSITION_PAGE,

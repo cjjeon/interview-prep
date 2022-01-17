@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom"
 
 interface GoBackButtonProps {
     link: string
+    title?: string
 }
 
-const GoBackButton: React.FC<GoBackButtonProps> = ({ link }) => {
+const GoBackButton: React.FC<GoBackButtonProps> = ({ link, title = "Go Back" }) => {
     const navigate = useNavigate()
 
     const goTo = () => {
@@ -21,7 +22,7 @@ const GoBackButton: React.FC<GoBackButtonProps> = ({ link }) => {
         <button onClick={() => goTo()} className={"text-sm text-blue-400 hover:text-blue-300"}>
             <div className={"flex items-center gap-2"}>
                 <FaArrowLeft size={13} />
-                Go Back
+                {title}
             </div>
         </button>
     )

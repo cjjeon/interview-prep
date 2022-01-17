@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import { gql, useQuery } from "@apollo/client"
 import Modal from "../component/modals/Modal"
 import CreateExperienceModal from "./CreateExperienceModal"
-import ViewExperience from "./ViewExperience"
+import ViewExperienceModal from "./ViewExperienceModal"
 import { PlusCircleIcon } from "@heroicons/react/solid"
 
 interface Experience {
@@ -67,7 +67,7 @@ const PastExperience: React.FC = () => {
                 onClose={() => setViewExperienceModalOpen(false)}
                 title={"View Experience"}
             >
-                <ViewExperience experienceId={viewExperienceId} />
+                <ViewExperienceModal experienceId={viewExperienceId} />
             </Modal>
             <div className={"flex justify-between items-center mb-2"}>
                 <div>

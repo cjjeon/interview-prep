@@ -137,6 +137,7 @@ const MockInterview: React.FC = () => {
                     link={INTERVIEW_PAGE.path
                         .replace(":companyDescriptionId", companyDescriptionId)
                         .replace(":roleId", roleId)}
+                    title={"Go Back To Interview Preparation"}
                 />
             </div>
             <div className={"bg-white shadow overflow-hidden sm:rounded-md p-5"}>

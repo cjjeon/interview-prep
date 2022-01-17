@@ -7,6 +7,7 @@ import { gql, useQuery } from "@apollo/client"
 import Loading from "../component/loading/Loading"
 import { PlusCircleIcon } from "@heroicons/react/solid"
 import GoBackButton from "../component/buttons/GoBackButton"
+import { INTERVIEW_TIPS } from "../constant/tips"
 
 const GET_COMPANY_DESCRIPTION = gql`
     query ($companyDescriptionId: ID!, $roleId: ID!) {
@@ -49,6 +50,7 @@ const InterviewPrep: React.FC = () => {
             companyDescriptionId,
             roleId,
         },
+        fetchPolicy: "no-cache",
     })
 
     if (!companyDescriptionId || !roleId) {
@@ -59,15 +61,17 @@ const InterviewPrep: React.FC = () => {
     if (loading || !data || data.companyDescription.roles.length === 0) return <Loading />
 
     return (
-        <div className={"flex flex-col gap-10"}>
+        <div className={"flex flex-col"}>
             <div>
-                <div className={"my-2"}>
-                    <GoBackButton link={DASHBOARD_PAGE.path} />
+                <div>
+                    <GoBackButton link={DASHBOARD_PAGE.path} title={"Go Back To Dashboard"} />
                 </div>
-                <h1 className={"text-xl leading-6 font-medium text-gray-900"}>Interview Preparation</h1>
-                <p className="mt-1 max-w-2xl text-sm text-gray-500">
-                    {data.companyDescription.company.name} - {data.companyDescription.roles[0].name}
-                </p>
+                <div className={"my-8"}>
+                    <h1 className={"text-xl leading-6 font-medium text-gray-900"}>Interview Preparation</h1>
+                    <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                        {data.companyDescription.company.name} - {data.companyDescription.roles[0].name}
+                    </p>
+                </div>
             </div>
             <div className={"bg-white shadow overflow-hidden sm:rounded-lg max-w-3xl"}>
                 <Collapsible
@@ -157,7 +161,22 @@ const InterviewPrep: React.FC = () => {
                                         "flex justify-center items-center my-3 block text-sm font-medium text-gray-900"
                                     }
                                 >
-                                    This feature is coming really soon!
+                                    <div className="divide-y divide-gray-200">
+                                        {INTERVIEW_TIPS.map((interviewTip) => {
+                                            return (
+                                                <div className={"w-full hover:bg-gray-100 py-3"}>
+                                                    <div className="flex flex-col text-sm">
+                                                        <p className="font-medium text-indigo-600 truncate">
+                                                            {interviewTip.title}
+                                                        </p>
+                                                        <p className="mt-1 text-sm text-gray-500 line-clamp-2">
+                                                            {interviewTip.subtitle}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
                                 </div>
                             ),
                         },

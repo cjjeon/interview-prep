@@ -1,14 +1,20 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { gql, useQuery } from "@apollo/client"
 import Loading from "../component/loading/Loading"
-import { ChevronRightIcon, PlusCircleIcon } from "@heroicons/react/solid"
+import { BellIcon, ChevronRightIcon, PlusCircleIcon } from "@heroicons/react/solid"
 import { useAuth0 } from "@auth0/auth0-react"
 import { Disclosure } from "@headlessui/react"
-import { useLocation, useNavigate } from "react-router-dom"
-import { COMPANY_CREATE_PAGE, CREATE_EXPERIENCE_PAGE, CREATE_POSITION_PAGE, INTERVIEW_PAGE } from "../constant/routes"
+import { useNavigate } from "react-router-dom"
+import {
+    COMPANY_CREATE_PAGE,
+    CREATE_EXPERIENCE_PAGE,
+    CREATE_POSITION_PAGE,
+    EXPERIENCE_PAGE,
+    INTERVIEW_PAGE,
+} from "../constant/routes"
 import Collapse from "../component/transition/Collapse"
 
-const GET_COMPANIES = gql`
+const GET_COMPANIES_EXPERIENCES = gql`
     query {
         companyDescriptions {
             id
@@ -24,41 +30,50 @@ const GET_COMPANIES = gql`
                 }
             }
         }
+        experiences {
+            id
+            summary
+            skills {
+                name
+            }
+        }
     }
 `
 
-interface GetCompany {
-    companyDescriptions: {
+interface CompanyDescription {
+    id: string
+    description: string
+    company: {
+        name: string
+    }
+    roles: {
         id: string
-        description: string
-        company: {
+        name: string
+        skills: {
             name: string
-        }
-        roles: {
-            id: string
-            name: string
-            skills: {
-                name: string
-            }[]
         }[]
     }[]
 }
 
-const Companies: React.FC = () => {
-    const { state } = useLocation()
+interface Experience {
+    id: number
+    summary: string
+    skills: {
+        name: string
+    }[]
+}
 
-    const { data, loading, refetch } = useQuery<GetCompany>(GET_COMPANIES)
+interface GetCompaniesExperiences {
+    companyDescriptions: CompanyDescription[]
+    experiences: Experience[]
+}
+
+interface CompaniesProps {
+    companyDescriptions: CompanyDescription[]
+}
+
+const Companies: React.FC<CompaniesProps> = ({ companyDescriptions }) => {
     const navigate = useNavigate()
-
-    useEffect(() => {
-        if (state && state.reload) {
-            refetch().then()
-        }
-    }, [state, refetch])
-
-    if (loading || !data) {
-        return <Loading />
-    }
 
     return (
         <div className="bg-white shadow overflow-hidden sm:rounded-md">
@@ -82,8 +97,8 @@ const Companies: React.FC = () => {
                 </div>
             </div>
             <div className="divide-y divide-gray-200">
-                {data.companyDescriptions.length > 0 ? (
-                    data.companyDescriptions.map((companyDescription) => (
+                {companyDescriptions.length > 0 ? (
+                    companyDescriptions.map((companyDescription) => (
                         <Disclosure key={companyDescription.id}>
                             {({ open }) => (
                                 <>
@@ -154,7 +169,8 @@ const Companies: React.FC = () => {
                                                                                 ":companyDescriptionId",
                                                                                 companyDescription.id
                                                                             )
-                                                                            .replace(":roleId", role.id)
+                                                                            .replace(":roleId", role.id),
+                                                                        { state: { reload: true } }
                                                                     )
                                                                 }
                                                             >
@@ -219,33 +235,12 @@ const Companies: React.FC = () => {
     )
 }
 
-const GET_EXPERIENCES = gql`
-    query {
-        experiences {
-            id
-            summary
-            skills {
-                name
-            }
-        }
-    }
-`
-
-interface GetExperiences {
-    experiences: {
-        id: number
-        summary: string
-        skills: {
-            name: string
-        }[]
-    }[]
+interface ExperiencesProps {
+    experiences: Experience[]
 }
 
-const Experiences: React.FC = () => {
-    const { data, loading } = useQuery<GetExperiences>(GET_EXPERIENCES)
+const Experiences: React.FC<ExperiencesProps> = ({ experiences }) => {
     const navigate = useNavigate()
-
-    if (loading || !data) return <Loading />
 
     return (
         <div className="bg-white shadow overflow-hidden sm:rounded-md">
@@ -269,15 +264,23 @@ const Experiences: React.FC = () => {
                 </div>
             </div>
             <div>
-                {data.experiences.length === 0 ? (
+                {experiences.length === 0 ? (
                     <div className={"flex justify-center items-center py-5 block text-sm font-medium text-gray-900"}>
                         No Experiences / Project has been added
                     </div>
                 ) : (
                     <div className="divide-y divide-gray-200">
-                        {data.experiences.map((experience) => {
+                        {experiences.map((experience) => {
                             return (
-                                <button key={experience.id} className={"py-4 px-6 w-full hover:bg-gray-100"}>
+                                <button
+                                    key={experience.id}
+                                    className={"py-4 px-6 w-full hover:bg-gray-100"}
+                                    onClick={() =>
+                                        navigate(
+                                            EXPERIENCE_PAGE.path.replace(":experienceId", experience.id.toString())
+                                        )
+                                    }
+                                >
                                     <div className="flex flex-col text-sm text-left">
                                         <p className="font-medium text-indigo-600 truncate">{experience.summary}</p>
                                         <div className="mt-1 flex flex-wrap gap-2">
@@ -306,7 +309,11 @@ const Experiences: React.FC = () => {
 const Dashboard = () => {
     const { user, isLoading } = useAuth0()
 
-    if (isLoading || !user) return <Loading />
+    const { data, loading } = useQuery<GetCompaniesExperiences>(GET_COMPANIES_EXPERIENCES, {
+        fetchPolicy: "no-cache",
+    })
+
+    if (isLoading || !user || loading || !data) return <Loading />
 
     return (
         <div className={"flex flex-col gap-10"}>
@@ -316,11 +323,29 @@ const Dashboard = () => {
                     Welcome! I hope you can <strong className={"font-bold"}>ACE</strong> your next interview!
                 </p>
             </div>
-            <div>
-                <Companies />
+            <div className={"-mb-8"}>
+                <h2 className={"text-lg leading-6 font-medium text-gray-900 my-3"}>Dashboard</h2>
             </div>
             <div>
-                <Experiences />
+                <Companies companyDescriptions={data.companyDescriptions} />
+            </div>
+            <div>
+                <Experiences experiences={data.experiences} />
+            </div>
+            <div className={"flex justify-center"}>
+                <a
+                    href={
+                        "https://docs.google.com/forms/d/e/1FAIpQLSeGijfXIdrp95gn0P8NFUAV5jvkwJwh5wD2OyFuZQj489pCDw/viewform?usp=pp_url"
+                    }
+                    rel={"noreferrer"}
+                    target={"_blank"}
+                    className={"rounded bg-amber-300 p-3 text-sm"}
+                >
+                    <div className={"flex"}>
+                        Please Give Us Feedbacks!
+                        <BellIcon className={"ml-2 w-5 h-5"} />
+                    </div>
+                </a>
             </div>
         </div>
     )
